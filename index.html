@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mathys Chabanel — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* « Volets » — variante du Lecteur : même principe (pas de scroll, tout s'ouvre au clic) mais composition en accordéon.
+     Les 5 sections sont des volets verticaux toujours visibles ; celui qu'on ouvre prend la place, les autres se replient en tranches. */
+  :root {
+    --noir: #0B0B0C; --noir2: #121214; --blanc: #ECEBE7; --gris: #7C7C80; --gris2: #C9C8C3; --trait: #29292C;
+    --accent: #C9A55A; --rec: #FF3B2F; --tranche: 72px; --pad: clamp(20px, 3vw, 44px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; background: var(--noir); }
+  body { color: var(--blanc); font-family: Montserrat, sans-serif; font-weight: 300; }
+  a, button { color: inherit; text-decoration: none; background: none; border: 0; font: inherit; cursor: pointer; }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
+  .label { font-weight: 400; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); }
+  .sq { position: relative; display: block; }
+  .sq > span { position: absolute; left: 0; top: 0; transform-origin: 0 0; white-space: nowrap; font-weight: 100; font-size: 100px; line-height: 1; text-transform: uppercase; }
+  .grain { position: fixed; inset: -50%; background: url(assets/grain.png); opacity: .08; pointer-events: none; z-index: 90; animation: fourmille .5s steps(6) infinite; }
+  @keyframes fourmille { 0% { transform: translate(0,0); } 20% { transform: translate(-7%,4%); } 40% { transform: translate(5%,-9%); } 60% { transform: translate(-11%,-3%); } 80% { transform: translate(8%,7%); } 100% { transform: translate(0,0); } }
+
+  /* ───── L'accordéon ───── */
+  .volets { display: flex; height: 100%; }
+  .volet { position: relative; display: flex; flex: 0 0 var(--tranche); min-width: var(--tranche); border-right: 1px solid var(--trait); overflow: hidden;
+    transition: flex-basis .65s cubic-bezier(.7, 0, .2, 1), flex-grow .65s cubic-bezier(.7, 0, .2, 1); }
+  .volet:last-child { border-right: 0; }
+  .volet.ouvert { flex: 1 1 0; }
+  /* La tranche : toujours visible, c'est la navigation */
+  .tranche { flex: 0 0 var(--tranche); height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 22px 0; transition: background .3s, color .3s; position: relative; }
+  .tranche:hover { background: var(--noir2); }
+  .tranche .n { font-weight: 400; font-size: 11px; letter-spacing: .14em; color: var(--gris); }
+  .tranche .titre { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 100; font-size: 34px; letter-spacing: .02em; text-transform: uppercase; white-space: nowrap; transition: font-weight .25s, color .25s; }
+  .tranche:hover .titre { font-weight: 300; }
+  .tranche .fl { font-weight: 100; font-size: 22px; color: var(--gris); transition: transform .3s, color .3s; }
+  .tranche:hover .fl { transform: translateX(3px); color: var(--accent); }
+  .volet.ouvert .tranche { border-right: 1px solid var(--trait); }
+  .volet.ouvert .tranche::after { content: ''; position: absolute; right: -1px; top: 22px; bottom: 22px; width: 1px; background: var(--accent); }
+  .volet.ouvert .tranche .titre { color: var(--accent); }
+  .volet.ouvert .tranche .fl { opacity: 0; }
+  /* Le contenu : apparaît une fois le volet ouvert */
+  .contenu { position: relative; flex: 1; min-width: 0; height: 100%; padding: var(--pad); display: flex; flex-direction: column; opacity: 0; visibility: hidden; transition: opacity .3s, visibility 0s .3s; }
+  .volet.ouvert .contenu { opacity: 1; visibility: visible; transition: opacity .45s .35s, visibility 0s; }
+  .entete { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: clamp(14px, 3vh, 28px); flex: none; min-height: 32px; }
+  .entete .gauche { display: flex; align-items: center; gap: 14px; }
+  .rec { display: flex; align-items: center; gap: 8px; font-weight: 400; font-size: 11px; letter-spacing: .16em; }
+  .rec::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--rec); animation: clign 1s steps(2) infinite; }
+  @keyframes clign { 50% { opacity: 0; } }
+  .pill { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border: 1px solid #3a3a3e; border-radius: 999px; font-weight: 400; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; transition: background .2s, color .2s; }
+  .pill:hover { background: var(--blanc); color: var(--noir); }
+  .pill.plein { background: var(--blanc); color: var(--noir); border-color: var(--blanc); }
+  .pill[hidden] { display: none; }
+
+  /* Accueil + à propos : le nom en haut, la présentation en dessous */
+  .accueil .nom { position: relative; height: 42vh; flex: none; cursor: ew-resize; }
+  .accueil .nom .ligne { position: absolute; left: 0; right: 0; height: 47%; }
+  .accueil .nom .ligne:nth-child(1) { top: 0; } .accueil .nom .ligne:nth-child(2) { top: 53%; }
+  .accueil .nom .ligne span { position: absolute; left: 0; top: 0; transform-origin: 0 0; font-weight: 100; font-size: 100px; line-height: 1; white-space: pre; will-change: transform; }
+  .presentation { flex: 1; min-height: 0; display: grid; grid-template-columns: clamp(130px, 13vw, 200px) 1.9fr 1fr; gap: 0 36px; align-items: end; border-top: 1px solid var(--trait); padding-top: clamp(16px, 3vh, 28px); margin-top: clamp(16px, 3vh, 32px); }
+  .presentation .portrait { width: 100%; aspect-ratio: 4 / 5; background: url(assets/portrait.jpg) center / cover; outline: 1px solid #3a3a3e; display: grid; place-items: end start; padding: 10px; position: relative; }
+  .presentation .portrait::before { content: ''; position: absolute; inset: 0; background: inherit; transform: translate(-10px, 8px); opacity: .25; z-index: -1; }
+  .presentation .portrait span { font-weight: 400; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--gris2); }
+  .presentation .texte { display: flex; flex-direction: column; gap: clamp(10px, 2vh, 18px); }
+  .presentation .lead { font-weight: 100; font-size: clamp(20px, 3vh, 30px); line-height: 1.2; }
+  .presentation .lead em { font-style: normal; color: var(--accent); }
+  .presentation .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; font-size: 13.5px; line-height: 1.6; color: var(--gris2); }
+  .presentation .droite { display: flex; flex-direction: column; gap: 16px; }
+  .presentation dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 14px; font-size: 13px; }
+  .presentation dt { font-weight: 400; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); padding-top: 3px; }
+  .bandeau { display: inline-flex; flex-direction: column; gap: 2px; padding: 9px 14px 11px; background: #161618; align-self: flex-start; }
+  .bandeau b { font-weight: 500; font-size: 16px; letter-spacing: -.02em; } .bandeau b i { font-style: normal; font-weight: 100; color: var(--accent); }
+  .bandeau small { font-weight: 400; font-size: 11px; }
+  .indice { display: flex; align-items: center; gap: 10px; }
+  .indice .fleche { font-size: 22px; font-weight: 100; color: var(--accent); animation: pousse 1.6s ease-in-out infinite; }
+  @keyframes pousse { 50% { transform: translateX(8px); } }
+
+  /* Projets : l'index typographique, puis la fiche du projet (visionneuse) dans le même volet */
+  /* Fiche : la visionneuse à gauche (une image à la fois + vignettes), les infos à droite, la pellicule en bas */
+  .fiche { flex: 1; min-height: 0; display: none; grid-template-columns: 1fr clamp(260px, 22vw, 330px); grid-template-rows: 1fr auto; gap: 16px clamp(32px, 3vw, 48px); }
+  .projets.detail .index { display: none; } .projets.detail .fiche { display: grid; }
+  /* Index typographique des projets */
+  .index { display: flex; flex: 1; min-height: 0; flex-direction: column; justify-content: center; }
+  .index a { display: grid; grid-template-columns: 48px 1fr auto 90px; align-items: baseline; gap: 20px; padding: clamp(4px, 1.2vh, 12px) 0; border-top: 1px solid var(--trait); }
+  .index a:last-child { border-bottom: 1px solid var(--trait); }
+  .index .t { font-weight: 100; font-size: clamp(30px, 8.4vh, 88px); line-height: 1.05; letter-spacing: -.02em; transform-origin: left center; transition: transform .35s cubic-bezier(.2, .9, .2, 1.1), color .2s; white-space: nowrap; }
+  .index .n, .index .c, .index .k { font-weight: 400; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); }
+  .index .k { text-align: right; }
+  .index .vi { display: none; }
+  .index a:hover .t { color: var(--accent); transform: translateX(14px) scaleY(1.12); }
+  .index a:hover .n { color: var(--accent); }
+  .index:hover a:not(:hover) .t { opacity: .35; }
+  .scene { display: grid; min-height: 0; grid-template-rows: 1fr auto; gap: 14px; }
+  .scene figure { margin: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: e-resize; }
+  .scene figure img, .scene figure video { display: block; max-width: 100%; max-height: calc(100% - 26px); object-fit: contain; }
+  /* Mode film (projet vidéo) : un seul écran 16:9, le plus grand possible, sans vignettes ; la fiche technique remplace le compte de visuels */
+  .fiche.film .vignettes { display: none; }
+  .fiche.film .scene { grid-template-rows: 1fr; }
+  .fiche.film figure { container-type: size; cursor: default; }
+  .ecran { position: relative; flex: none; width: min(100cqw, (100cqh - 30px) * 16 / 9); aspect-ratio: 16 / 9; background: #000; outline: 1px solid var(--trait); outline-offset: 6px; }
+  .ecran video { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .lire { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: linear-gradient(transparent 40%, rgba(11, 11, 12, .55)); color: var(--blanc); }
+  .lire i { display: grid; place-items: center; width: clamp(64px, 9vh, 92px); aspect-ratio: 1; border: 1px solid var(--blanc); border-radius: 50%; font-style: normal; font-size: 18px; padding-left: 4px; transition: background .2s, color .2s, transform .3s cubic-bezier(.2, .9, .2, 1.1); }
+  .lire .label { color: var(--blanc); }
+  .lire:hover i { background: var(--accent); border-color: var(--accent); color: var(--noir); transform: scale(1.08); }
+  .ecran.joue .lire { display: none; }
+  .fiche .tech { display: none; grid-template-columns: auto 1fr; gap: 9px 16px; margin: 4px 0 0; font-size: 14px; }
+  .fiche.film .tech { display: grid; } .fiche.film #pj-compte { display: none; }
+  .fiche .tech dt { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); padding-top: 2px; }
+  .fiche .tech dd { margin: 0; color: var(--gris2); }
+  .scene figcaption b { color: var(--accent); font-weight: 400; margin-right: 8px; }
+  .vignettes { display: flex; gap: 8px; height: clamp(40px, 7vh, 64px); justify-content: center; }
+  .vignettes button { display: block; flex: none; height: 100%; padding: 0; opacity: .4; transition: opacity .2s; }
+  .vignettes button img { height: 100%; width: auto; display: block; }
+  .vignettes button:hover { opacity: .8; } .vignettes button[aria-current="true"] { opacity: 1; outline: 1px solid var(--accent); outline-offset: 2px; }
+  .fiche .palette { display: flex; gap: 6px; margin-top: 10px; } .fiche .palette i { width: 22px; height: 22px; border-radius: 50%; }
+  .fiche .infos { display: flex; flex-direction: column; min-height: 0; }
+  .fiche .infos .sq { height: clamp(72px, 15vh, 160px); width: 100%; margin: 12px 0 18px; }
+  #pj-num { font-size: 12px; }
+  .fiche .desc { margin: 0 0 16px; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.6; color: var(--gris2); text-wrap: pretty; }
+  .fiche .outils { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; }
+  .fiche .outils li { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--blanc); border: 1px solid #3A3A3A; border-radius: 999px; padding: 6px 12px; }
+  .fiche .nav { margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding-top: 14px; }
+  .pellicule { grid-column: 1 / 3; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; height: clamp(30px, 5vh, 44px); }
+  .pellicule button { position: relative; background: var(--img) center / cover; opacity: .4; transition: opacity .2s; }
+  .pellicule button span { position: absolute; left: 6px; top: 4px; font-weight: 400; font-size: 9px; letter-spacing: .1em; }
+  .pellicule button:hover { opacity: .8; }
+  .pellicule button[aria-current="true"] { opacity: 1; outline: 1px solid var(--accent); outline-offset: 2px; }
+
+  /* Playlist : la pochette en grand à gauche ; à droite le texte, puis le lecteur Deezer avec les titres */
+  .playlist .corps { flex: 1; min-height: 0; display: grid; grid-template-columns: auto 1fr; gap: 48px; }
+  .disque-album { display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+  .disque-album .pochette-lp { height: min(58vh, 520px); aspect-ratio: 1; background: #111 url(https://cdn-images.dzcdn.net/images/cover/1b31d20526c3805bc36c22fec3409d89/1000x1000-000000-80-0-0.jpg) center / cover; box-shadow: 0 20px 44px rgba(0,0,0,.55); }
+  .disque-album .sq { height: clamp(40px, 7vh, 66px); width: 100%; }
+  .disque-album .meta-album { display: flex; justify-content: space-between; align-items: baseline; }
+  .disque-album .label b { color: var(--blanc); font-weight: 400; }
+  .ecoute { display: flex; flex-direction: column; gap: 18px; min-height: 0; }
+  .ecoute .pave { font-weight: 200; font-size: clamp(15px, 2vh, 19px); line-height: 1.6; max-width: 720px; color: var(--gris2); }
+  .ecoute .pave::first-line { color: var(--blanc); }
+  .ecoute .pave em { font-style: normal; color: var(--accent); }
+  .widget { flex: 1; min-height: 340px; border: 0; width: 100%; }
+  .pistes { margin: 0; padding: 0; list-style: none; overflow-y: auto; min-height: 0; border-bottom: 1px solid var(--trait); scrollbar-width: thin; }
+  .pistes a { display: grid; grid-template-columns: 34px 1fr auto 22px; align-items: baseline; gap: 10px; padding: 9px 4px; border-top: 1px solid var(--trait); transition: color .2s, padding .25s; }
+  .pistes .n, .pistes .d { font-size: 11px; letter-spacing: .14em; color: var(--gris); font-variant-numeric: tabular-nums; }
+  .pistes .t { font-weight: 300; font-size: 15px; color: var(--blanc); }
+  .pistes .f { color: var(--gris); text-align: right; font-size: 12px; }
+  .pistes a:hover { padding-left: 12px; } .pistes a:hover .t, .pistes a:hover .f { color: var(--accent); }
+  .ecoute .actions { display: flex; gap: 10px; align-items: center; }
+
+  /* Carte « bande-son » : accueil et fiches projet */
+  .bande-son { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 10px 12px; border: 1px solid #3a3a3e; transition: border-color .2s; }
+  .bande-son:hover { border-color: var(--accent); }
+  .bande-son .mini { width: 40px; height: 40px; flex: none; background: url(https://cdn-images.dzcdn.net/images/cover/1b31d20526c3805bc36c22fec3409d89/250x250-000000-80-0-0.jpg) center / cover; }
+  .bande-son b { display: block; font-weight: 300; font-size: 15px; } .bande-son b em { font-style: normal; color: var(--accent); }
+  .bande-son .label { font-size: 10px; }
+  .bande-son .f { margin-left: auto; font-weight: 100; font-size: 20px; color: var(--accent); }
+
+  /* Contact : l'email en grand, les liens en liste */
+  .contact .corps { flex: 1; min-height: 0; display: grid; grid-template-rows: auto 1fr; gap: clamp(16px, 4vh, 40px); }
+  .mail { display: block; text-align: left; }
+  .mail .sq { height: clamp(50px, 12vh, 130px); width: 100%; }
+  .mail .sq > span { transition: color .25s; }
+  .mail:hover .sq > span { color: var(--accent); }
+  .mail .etat { display: block; margin-top: 10px; }
+  .liens { display: flex; flex-direction: column; justify-content: flex-end; }
+  .liens a { display: grid; grid-template-columns: 56px 1fr 1fr 40px; align-items: center; padding: clamp(10px, 2vh, 18px) 0; border-top: 1px solid var(--trait); transition: padding .25s; }
+  .liens a:last-child { border-bottom: 1px solid var(--trait); }
+  .liens a b { font-weight: 100; font-size: clamp(24px, 3.6vh, 38px); }
+  .liens a .f { font-weight: 100; font-size: 24px; text-align: right; transition: transform .25s, color .25s; }
+  .liens a:hover { padding-left: 14px; } .liens a:hover .f { color: var(--accent); transform: translateX(4px); }
+
+  #af { position: fixed; left: 0; top: 0; z-index: 45; pointer-events: none; border: 1px solid var(--accent); border-radius: 10px; opacity: 0; transition: opacity .2s; }
+  #af.on { opacity: .8; }
+
+  /* Écran étroit : les volets s'empilent (tranches horizontales) */
+  @media (max-width: 860px) {
+    .volets { flex-direction: column; }
+    .volet { flex: 0 0 56px; min-width: 0; border-right: 0; border-bottom: 1px solid var(--trait); flex-direction: column; transition: flex-basis .5s, flex-grow .5s; }
+    .tranche { flex: 0 0 56px; height: auto; flex-direction: row; padding: 0 16px; }
+    .tranche .titre { writing-mode: horizontal-tb; transform: none; font-size: 24px; }
+    .volet.ouvert .tranche::after { display: none; }
+    .contenu { overflow-y: auto; height: auto; }
+    .index .c, .index .k { display: none; } .index a { grid-template-columns: 36px 1fr; }
+    .fiche, .presentation, .atelier .corps { grid-template-columns: 1fr !important; }
+    #pochette { max-width: 100%; height: auto; width: 100%; }
+  }
+  /* Téléphone (maquette « iPhone 17 ») : bandes de 44 px, index compact, fiche en colonne (titre, image, vignettes, navigation) */
+  @media (max-width: 860px) {
+    .volet { flex-basis: 44px; }
+    .tranche { flex-basis: 44px; padding: 0 20px; gap: 14px; }
+    .tranche .titre { flex: 1; font-size: 20px; text-align: left; }
+    .contenu { padding: 14px 20px 12px; }
+    .entete { margin-bottom: 10px; min-height: 28px; }
+    .projets.detail #pj-fil { display: none; }
+    .rec { font-size: 9px; }
+    .index { justify-content: flex-start; }
+    .index a { grid-template-columns: 30px 1fr; gap: 2px 0; padding: 10px 0; }
+    .index .n { grid-row: 1 / 3; padding-top: 8px; }
+    .index .t { font-size: 28px; overflow: hidden; text-overflow: ellipsis; }
+    .index .c { display: block; grid-column: 2; font-size: 9px; }
+    .index .k { display: none; }
+    .index a:hover .t { transform: translateX(8px); }
+    .projets.detail .fiche { display: flex; flex-direction: column; gap: 10px; }
+    .fiche .infos { display: contents; }
+    #pj-num { order: 1; font-size: 10.5px; }
+    .fiche .infos .sq { order: 2; height: 58px; margin: 0; flex: none; }
+    .fiche .desc { order: 2; margin: 0; font-size: 13.5px; line-height: 1.45; }
+    .fiche .outils { order: 2; margin: 0; }
+    .fiche .outils li { font-size: 10px; padding: 5px 10px; }
+    #pj-compte, .pellicule { display: none; }
+    .scene { order: 3; flex: 1; min-height: 0; gap: 10px; }
+    .vignettes { height: 40px; overflow-x: auto; justify-content: flex-start; }
+    .vignettes button { flex: none; }
+    #pj-palette { order: 4; justify-content: center; margin: 0; }
+    .fiche .tech { order: 4; grid-template-columns: auto 1fr auto 1fr; gap: 6px 10px; margin: 0; font-size: 12.5px; }
+    .ecran { outline-offset: 4px; }
+    #pj-palette:empty { display: none; }
+    .fiche .nav { order: 5; flex-direction: row; justify-content: space-between; padding-top: 0; margin-top: 0; }
+    /* Accueil : nom plus court, portrait + phrase d'accroche côte à côte, le reste en colonne */
+    .accueil .entete .indice, .accueil .droite .rec { display: none; }
+    .accueil .nom { height: 15vh; }
+    .presentation { grid-template-columns: 92px 1fr !important; gap: 12px 14px; align-items: start; align-content: start; padding-top: 12px; margin-top: 12px; overflow: hidden; }
+    .presentation .texte { display: contents; }
+    .presentation .texte > .label { display: none; }
+    .presentation .lead { grid-column: 2; grid-row: 1; align-self: end; font-size: 16px; }
+    .presentation .portrait { grid-column: 1; grid-row: 1; }
+    .presentation .cols { grid-column: 1 / 3; grid-template-columns: 1fr; gap: 6px; font-size: 11.5px; line-height: 1.45; }
+    .presentation .droite { grid-column: 1 / 3; gap: 10px; }
+    .presentation dl { gap: 4px 12px; font-size: 11.5px; }
+    .bande-son { margin-top: 0; padding: 8px 10px; }
+    .bande-son .mini { width: 32px; height: 32px; }
+    .bande-son b { font-size: 13px; }
+    /* Playlist : pochette + titre côte à côte, texte plus serré, lecteur Deezer dans la place restante */
+    .playlist .corps { display: flex; flex-direction: column; gap: 12px; }
+    .disque-album { display: grid; grid-template-columns: 96px minmax(0, 1fr); grid-template-rows: 1fr auto; column-gap: 14px; row-gap: 6px; align-items: end; flex: none; }
+    .disque-album .pochette-lp { height: 96px; grid-row: 1 / 3; }
+    .disque-album .sq { height: 40px; }
+    .disque-album .meta-album { flex-direction: column; gap: 2px; }
+    .ecoute { flex: 1; gap: 10px; }
+    .ecoute > .label { display: none; }
+    .ecoute .pave { font-size: 12.5px; line-height: 1.5; }
+    .widget { min-height: 0; flex: 1 1 120px; }
+    .pistes a { padding: 7px 2px; grid-template-columns: 28px 1fr auto 18px; }
+    .pistes .t { font-size: 13.5px; }
+    .ecoute .actions .pill { padding: 7px 12px; font-size: 10px; }
+    /* Contact : l'adresse tient dans la largeur, liens compacts */
+    .contact .corps { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .mail .sq { height: 44px; }
+    .liens a { grid-template-columns: 30px minmax(0, 1fr) 24px; padding: 12px 0; }
+    .liens a .label:nth-of-type(2) { display: none; }
+    .liens a b { font-size: 26px; }
+    .liens a:hover { padding-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .grain, .rec::before, .indice .fleche { animation: none; } .volet, .contenu { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div id="af"></div>
+
+<div class="volets">
+  <!-- 00 Biographie : le nom + la présentation (ancien « À propos ») -->
+  <section class="volet accueil" data-v="accueil">
+    <a class="tranche" href="#/" data-af><span class="n">00</span><span class="titre">Biographie</span><span class="fl">→</span></a>
+    <div class="contenu">
+      <div class="entete"><span class="label">Portfolio 2026 — graphisme & direction artistique</span><span class="indice label">Ouvre un volet <span class="fleche">→</span></span></div>
+      <div class="nom" id="nom"></div>
+      <div class="presentation">
+        <div class="portrait" role="img" aria-label="Portrait de Mathys Chabanel"></div>
+        <div class="texte">
+          <span class="label">Notes de pochette</span>
+          <p class="lead">Passionné par la musique et la création visuelle, je puise mon inspiration dans la scène musicale <em>underground</em>.</p>
+          <div class="cols">
+            <p>À travers les clips, les pochettes d'albums et les univers graphiques qui les accompagnent. J'aime travailler les textures avec du grain, déformer et écraser les typographies.</p>
+            <p>Jouer avec les contrastes et bousculer les compositions pour créer des visuels singuliers. Transmettre mon univers, une identité forte, et chercher de nouvelles façons de m'exprimer.</p>
+          </div>
+        </div>
+        <div class="droite">
+          <dl><dt>École</dt><dd>Brassart Lyon · 3e année</dd><dt>Recherche</dt><dd>Stage 2 à 3 mois · janv. → mars 2027</dd><dt>Outils</dt><dd>Photoshop, Illustrator, InDesign, Figma</dd><dt>Domaines</dt><dd>Création, mise en page, identité visuelle, édition</dd></dl>
+          <a class="bande-son" href="#/playlist" data-af><span class="mini"></span><span><span class="label">Bande-son du portfolio</span><b><em>Dancing In The Rain</em> — 63KLUF</b></span><span class="f">▶</span></a>
+          <span class="rec" data-rec>REC 00:00:00</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 Projets -->
+  <section class="volet projets" data-v="projets">
+    <a class="tranche" href="#/projets" data-af><span class="n">01</span><span class="titre">Projets</span><span class="fl">→</span></a>
+    <div class="contenu">
+      <div class="entete">
+        <div class="gauche"><button class="pill" id="vers-planche" hidden data-af>◀◀ Index</button><span class="label" id="pj-fil">01 — Projets · 7 projets</span></div>
+        <span class="rec" data-rec>REC 00:00:00</span>
+      </div>
+      <div class="index" id="index"></div>
+      <div class="fiche">
+        <div class="scene" id="pj-scene">
+          <figure id="sc-fig" title="Image suivante"><img id="sc-img" alt=""><div class="ecran" id="sc-ecran" hidden><video id="sc-vid" playsinline preload="metadata"></video><button class="lire" id="sc-lire" data-af><i>▶</i><span class="label">Lire le film</span></button></div><figcaption class="label" id="sc-leg"></figcaption></figure>
+          <div class="vignettes" id="sc-vign"></div>
+        </div>
+        <div class="infos">
+          <span class="label" id="pj-num"></span>
+          <div class="sq" id="pj-titre"><span>Projet</span></div>
+          <p class="desc" id="pj-desc"></p>
+          <ul class="outils" id="pj-outils" aria-label="Logiciels"></ul>
+          <span class="label" id="pj-compte"></span>
+          <dl class="tech" id="pj-tech"></dl>
+          <div class="palette" id="pj-palette"></div>
+          <div class="nav"><button class="pill" id="pj-prec" data-af>← Précédent</button><button class="pill" id="pj-suiv" data-af>Suivant →</button></div>
+        </div>
+        <div class="pellicule" id="pellicule"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 Playlist : l'album « Dancing In The Rain » de 63KLUF, la bande-son qui guide tout le portfolio (liste des titres → Deezer) -->
+  <section class="volet playlist" data-v="playlist">
+    <a class="tranche" href="#/playlist" data-af><span class="n">02</span><span class="titre">Playlist</span><span class="fl">→</span></a>
+    <div class="contenu">
+      <div class="entete"><span class="label">02 — La bande-son du portfolio</span><span class="rec" data-rec>REC 00:00:00</span></div>
+      <div class="corps">
+        <div class="disque-album">
+          <div class="pochette-lp" role="img" aria-label="Pochette de Dancing In The Rain — 63KLUF"></div>
+          <div class="sq" id="pl-sq"><span>Dancing in the rain</span></div>
+          <div class="meta-album"><span class="label"><b>63KLUF</b> · 2026</span><span class="label">17 titres · 39 min</span></div>
+        </div>
+        <div class="ecoute">
+          <span class="label">Pourquoi cet album</span>
+          <p class="pave">Je ne pars jamais d'un titre en particulier : c'est <em>Dancing In The Rain</em> en entier, en boucle, qui donne le ton de tout ce que je fais. Cette ambiance de nuit chaude, ces lumières qui bavent, c'est de là que viennent mes fonds sombres, mon grain et mes contrastes ; ses ruptures et ses accélérations, je les retrouve dans ma façon de casser les grilles et d'écraser la typo. Je le lance au début de chaque projet et je le laisse tourner jusqu'au rendu final : <em>c'est lui qui fixe l'énergie de mon travail.</em></p>
+          <!-- la liste des titres est écrite ici (le lecteur intégré Deezer ne s'affichait plus) ; chaque titre s'ouvre sur Deezer -->
+          <ol class="widget pistes" aria-label="Titres de l'album">
+            <li><a href="https://www.deezer.com/fr/track/4154649312" target="_blank" rel="noopener" data-af><span class="n">01</span><span class="t">Indochine</span><span class="d">3:04</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649322" target="_blank" rel="noopener" data-af><span class="n">02</span><span class="t">Fratello</span><span class="d">2:29</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649332" target="_blank" rel="noopener" data-af><span class="n">03</span><span class="t">Célébration</span><span class="d">2:06</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649342" target="_blank" rel="noopener" data-af><span class="n">04</span><span class="t">Hotel Party</span><span class="d">2:11</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649352" target="_blank" rel="noopener" data-af><span class="n">05</span><span class="t">Marriott</span><span class="d">1:48</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649362" target="_blank" rel="noopener" data-af><span class="n">06</span><span class="t">Señorita</span><span class="d">2:09</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649372" target="_blank" rel="noopener" data-af><span class="n">07</span><span class="t">Picasso</span><span class="d">2:53</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649382" target="_blank" rel="noopener" data-af><span class="n">08</span><span class="t">Oh Oh</span><span class="d">2:18</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649392" target="_blank" rel="noopener" data-af><span class="n">09</span><span class="t">LV comme</span><span class="d">2:16</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649402" target="_blank" rel="noopener" data-af><span class="n">10</span><span class="t">Macadam</span><span class="d">2:27</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649412" target="_blank" rel="noopener" data-af><span class="n">11</span><span class="t">Marie Curie</span><span class="d">2:23</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649422" target="_blank" rel="noopener" data-af><span class="n">12</span><span class="t">Skrt</span><span class="d">2:04</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649432" target="_blank" rel="noopener" data-af><span class="n">13</span><span class="t">Promesse</span><span class="d">2:41</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649442" target="_blank" rel="noopener" data-af><span class="n">14</span><span class="t">Majeur en l'air</span><span class="d">1:56</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649452" target="_blank" rel="noopener" data-af><span class="n">15</span><span class="t">Chaîne alimentaire</span><span class="d">2:06</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649462" target="_blank" rel="noopener" data-af><span class="n">16</span><span class="t">Je ne sais quoi</span><span class="d">2:07</span><span class="f">↗</span></a></li>
+            <li><a href="https://www.deezer.com/fr/track/4154649472" target="_blank" rel="noopener" data-af><span class="n">17</span><span class="t">Paranormal Activity</span><span class="d">2:19</span><span class="f">↗</span></a></li>
+          </ol>
+          <div class="actions">
+            <a class="pill plein" href="#/projets" data-af>Voir les projets →</a>
+            <a class="pill" href="https://www.deezer.com/fr/album/1029375272" target="_blank" rel="noopener" data-af>Ouvrir sur Deezer ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 Contact -->
+  <section class="volet contact" data-v="contact">
+    <a class="tranche" href="#/contact" data-af><span class="n">03</span><span class="titre">Contact</span><span class="fl">→</span></a>
+    <div class="contenu">
+      <div class="entete"><span class="label">03 — Contact</span><span class="rec" data-rec>REC 00:00:00</span></div>
+      <div class="corps">
+        <button class="mail" id="copier" data-af><span class="sq" id="mail-sq"><span>chabanel.mathys@gmail.com</span></span><span class="label etat" id="copier-etat">Clic pour copier l'adresse</span></button>
+        <nav class="liens" aria-label="Liens">
+          <a href="docs/CV-Mathys-Chabanel.pdf" download="CV-Mathys-Chabanel.pdf" data-af><span class="label">01</span><b>CV</b><span class="label">Télécharger le PDF</span><span class="f">↓</span></a>
+          <a href="https://www.instagram.com/mathys.design/" target="_blank" rel="noopener" data-af><span class="label">02</span><b>Instagram</b><span class="label">@mathys.design</span><span class="f">↗</span></a>
+          <a href="https://www.behance.net/mathyschabanel" target="_blank" rel="noopener" data-af><span class="label">03</span><b>Behance</b><span class="label">behance.net/mathyschabanel</span><span class="f">↗</span></a>
+          <a href="https://www.linkedin.com/feed/" target="_blank" rel="noopener" data-af><span class="label">04</span><b>LinkedIn</b><span class="label">Mathys Chabanel</span><span class="f">↗</span></a>
+        </nav>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="assets/volets.js?v=b20"></script>
+</body>
+</html>
