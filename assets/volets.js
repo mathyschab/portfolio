@@ -1,4 +1,4 @@
-// « Volets » — variante du Lecteur en accordéon (4 volets : le premier réunit le nom et l'à propos). Routes : #/ · #/projets · #/projets/04 · #/playlist · #/contact
+// « Volets » — variante du Lecteur en accordéon (4 volets : le premier réunit le nom et l'à propos). Routes : #/ · #/projets · #/projets/04 · #/univers · #/contact (#/playlist → #/univers)
 // Clavier : ← → volet précédent / suivant (ou projet précédent / suivant dans une fiche) · ↑ ↓ image dans la visionneuse · 0–3 volets · Échap retour
 (() => {
   const $ = s => document.querySelector(s);
@@ -31,7 +31,7 @@
   const src = id => 'assets/projets/' + id + '.jpg';
   const nn = i => String(i + 1).padStart(2, '0');
   const compte = p => p[2][0][2] === 'video' ? 'Vidéo' : p[2].length + ' visuels';
-  const ORDRE = ['accueil', 'projets', 'playlist', 'contact'];   // « À propos » est fusionné dans le premier volet
+  const ORDRE = ['accueil', 'projets', 'univers', 'contact'];   // « À propos » est fusionné dans le premier volet
 
   // ───── Typo écrasée ─────
   const mctx = document.createElement('canvas').getContext('2d');
@@ -157,7 +157,8 @@
 
   // ───── Routeur ─────
   function lire() {
-    const [a, b] = location.hash.replace(/^#\/?/, '').split('/');
+    let [a, b] = location.hash.replace(/^#\/?/, '').split('/');
+    if (a === 'playlist') a = 'univers';   // ancien lien partagé
     if (a === 'projets' && /^\d\d$/.test(b || '') && +b >= 1 && +b <= NB) return { v: 'projets', i: +b - 1 };
     if (ORDRE.indexOf(a) > 0) return { v: a };
     return { v: 'accueil' };
@@ -210,10 +211,6 @@
     setTimeout(() => { $('#copier-etat').textContent = 'Clic pour copier l\'adresse'; }, 1800);
   });
 
-  // ───── Playlist : « Dancing In The Rain » — 63KLUF ─────
-  // L'album entier guide le portfolio (pas un titre par projet) : le volet l'explique, le lecteur officiel Deezer le joue.
-  // Rien à piloter ici : le lecteur Deezer gère la lecture et la liste des titres.
-
   // ───── Cadre de mise au point ─────
   const af = $('#af'), box = { x: 0, y: 0, w: 0, h: 0 };
   let cible = null;
@@ -238,9 +235,12 @@
   }
   document.fonts.load('100 100px Montserrat').then(() => {
     probe();
+    // chaque titre écrasé se recale dès que sa boîte change de taille (fin d'ouverture d'un volet, rotation…)
+    const ro = new ResizeObserver(es => es.forEach(e => fit(e.target)));
+    $$('.sq').forEach(el => ro.observe(el));
     construireNom();
     afficher();
     requestAnimationFrame(frame);
   });
-  addEventListener('resize', () => { fitVolet($('.volet.ouvert')); fit($('#pl-sq')); });
+  addEventListener('resize', () => { fitVolet($('.volet.ouvert')); fit($('#u-sq')); });
 })();
