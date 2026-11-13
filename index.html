@@ -117,7 +117,8 @@
   .fiche.film.solo .scene { grid-template-rows: 1fr; }
   .fiche.film figure { container-type: size; cursor: default; }
   .ecran { position: relative; flex: none; width: min(100cqw, (100cqh - 30px) * 16 / 9); aspect-ratio: 16 / 9; background: #000; outline: 1px solid var(--trait); outline-offset: 6px; }
-  .ecran video { display: block; width: 100%; height: 100%; object-fit: contain; }
+  /* le film remplit exactement son écran 16:9 (sans la marge réservée à la légende des photos) */
+  .scene figure .ecran video { display: block; width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover; }
   .lire { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: linear-gradient(transparent 40%, rgba(11, 11, 12, .55)); color: var(--blanc); }
   .lire i { display: grid; place-items: center; width: clamp(64px, 9vh, 92px); aspect-ratio: 1; border: 1px solid var(--blanc); border-radius: 50%; font-style: normal; font-size: 18px; padding-left: 4px; transition: background .2s, color .2s, transform .3s cubic-bezier(.2, .9, .2, 1.1); }
   .lire .label { color: var(--blanc); }
@@ -392,6 +393,6 @@
   </section>
 </div>
 
-<script src="assets/volets.js?v=b27"></script>
+<script src="assets/volets.js?v=b28"></script>
 </body>
 </html>
