@@ -12,20 +12,44 @@
     ['Motion Design', 'Film d\'animation · DALYO3', [['guijaune', 'Film, 0:44', 'video']], 'guijaune', null, [['Durée', '0:44'], ['Format', '16:9 · 1080p'], ['Son', 'Oui'], ['Cadre', 'DALYO3 · WSP1']]],
     ['C3L3ST', 'Cover d\'album · vinyle', [['913', 'Vinyle, ambiance nocturne'], ['914', 'Cover'], ['915', 'Déclinaison paysage']], '914'],
     ['63OG', 'Cover d\'album · vinyle', [['910', 'Mockup vinyle'], ['911', 'Cover'], ['912', 'Bannière']], '911'],
-    ['Toca Loco', 'Identité digitale', [['917', 'Application en main'], ['916', 'Écrans']], '917'],
+    ['Toca Loco', 'Site web · food truck mexicain', [['917', 'Application en main'], ['916', 'Écrans']], '917'],
     ['Dancing In The Rain', 'Affiche · 63KLUF', [['907', 'En situation, rue'], ['905', 'Affiche'], ['906', 'Détail']], '905'],
     ['Obscura', 'Affiche lo-fi', [['908', 'En situation, mur décrépi'], ['909', 'Affiche']], '909']
   ];
-  // Une phrase par projet + les logiciels utilisés (même ordre que PROJETS)
+  // Pour chaque projet (même ordre que PROJETS) : [cadre, la demande, mes choix, logiciels] — textes de Mathys, remis en forme
   const TEXTES = [
-    ['Identité visuelle d\'un festival engagé : affiche, déclinaisons, billets et posts pour les réseaux.', ['Photoshop', 'Illustrator', 'Figma']],
-    ['Rebranding d\'un bar : logotype, carte, façade, tablier et sous-bocks.', ['Photoshop', 'Illustrator']],
-    ['Film en motion design pour une fédération de sport pour tous.', ['After Effects']],
-    ['Projet personnel : une cover d\'album, du vinyle au format paysage.', ['Photoshop', 'Illustrator']],
-    ['Projet personnel : une cover d\'album, déclinée en vinyle et en bannière.', ['Photoshop', 'Illustrator']],
-    ['Branding d\'un food truck, jusqu\'aux écrans de son application.', ['Figma']],
-    ['Projet personnel : une affiche et sa mise en situation dans la rue.', ['Photoshop', 'Illustrator']],
-    ['La combinaison de deux styles dans une seule affiche lo-fi.', ['Photoshop', 'Illustrator']]
+    ['Projet d\'école, 3e année',
+     'Créer l\'identité visuelle d\'un festival engagé, déclinée en affiche, en site web et en goodies.',
+     'Je me suis inspiré des visuels de clips musicaux : beaucoup de grain et des tons très chauds. Le thème que je voulais faire passer, c\'est la lumière et le feu intérieur. La typo AKIRA donne au festival une identité massive.',
+     ['Photoshop', 'Illustrator', 'Figma']],
+    ['Projet d\'école',
+     'Le rebranding du bar Le Jeu de Paume.',
+     'J\'ai gardé une DA qui colle au bar, avec une vision différente. Une typo simple, avec un détail qui compte : un décalage entre les lettres. Elle apporte du calme, parce que le bar reste un moment de bien-être. Je suis parti de leur bleu et j\'ai ajouté du doré pour donner plus de couleur.',
+     ['Photoshop', 'Illustrator']],
+    ['Projet d\'école',
+     'Un film en motion design pour une fédération, qui montre que tout le monde peut faire du sport, qui qu\'il soit.',
+     'Je me suis inspiré des jeux vidéo : l\'étoile de Mario et les planètes d\'autres jeux. Le vert, le rose et le bleu reprennent les couleurs de la fédération, et la typo pixel rappelle l\'univers du jeu vidéo.',
+     ['After Effects']],
+    ['Projet perso',
+     'La cover d\'album d\'un artiste au son dynamique et puissant, avec une DA très prononcée, agressive.',
+     'Mon inspiration vient des clips de rap. Le titre en rouge montre l\'agressivité, et le grain, présent dans beaucoup de mes projets, fait le lien avec ma DA.',
+     ['Photoshop', 'Illustrator']],
+    ['Projet perso',
+     'Une cover pour moi, pour m\'entraîner et compléter mes projets perso dans ma DA.',
+     'Je me suis inspiré des clips de rap d\'un artiste que j\'aime beaucoup.',
+     ['Photoshop', 'Illustrator']],
+    ['Projet d\'école',
+     'Le site web d\'un food truck mexicain, avec une DA mexicaine.',
+     'J\'ai choisi des couleurs assez ternes, sauf le beige qui crée le contraste. Elles viennent de la cuisine mexicaine : les nachos, les sauces piquantes. La typo est familière pour que le client se sente bien.',
+     ['Figma']],
+    ['Projet perso',
+     'Comme pour 63OG, un projet pour m\'entraîner, cette fois en affiche.',
+     'Le jaune fait référence à un album de 63KLUF et aux bracelets qu\'il a sortis.',
+     ['Photoshop', 'Illustrator']],
+    ['Projet d\'école',
+     'Combiner deux styles dans une même affiche : l\'opium et le lo-fi.',
+     'Le violet vient du lo-fi, le noir et blanc sur les artistes vient de l\'opium. Et toujours du grain.',
+     ['Photoshop', 'Illustrator']]
   ];
   const NB = PROJETS.length;
   const src = id => 'assets/projets/' + id + '.jpg';
@@ -140,8 +164,10 @@
     $('#pj-num').textContent = p[1];
     $('#pj-titre span').textContent = p[0];
     $('#pj-compte').textContent = compte(p);
-    $('#pj-desc').textContent = TEXTES[i][0];
-    $('#pj-outils').innerHTML = TEXTES[i][1].map(o => '<li>' + o + '</li>').join('');
+    $('#pj-cadre').textContent = TEXTES[i][0];
+    $('#pj-demande').textContent = TEXTES[i][1];
+    $('#pj-choix').textContent = TEXTES[i][2];
+    $('#pj-outils').innerHTML = TEXTES[i][3].map(o => '<li>' + o + '</li>').join('');
     $('#pj-tech').innerHTML = (p[5] || []).map(([k, val]) => '<dt>' + k + '</dt><dd>' + val + '</dd>').join('');
     $('#pj-palette').innerHTML = (p[4] || []).map(c => '<i style="background:' + c + '"></i>').join('');
     $('#sc-vign').innerHTML = p[2].map((x, k) => '<button data-k="' + k + '" aria-label="' + x[1] + '" data-af><img src="' + src(x[0]) + '" alt=""></button>').join('');

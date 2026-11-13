@@ -95,7 +95,7 @@
 
   /* Projets : l'index typographique, puis la fiche du projet (visionneuse) dans le même volet */
   /* Fiche : la visionneuse à gauche (une image à la fois + vignettes), les infos à droite, la pellicule en bas */
-  .fiche { flex: 1; min-height: 0; display: none; grid-template-columns: 1fr clamp(260px, 22vw, 330px); grid-template-rows: 1fr auto; gap: 16px clamp(32px, 3vw, 48px); }
+  .fiche { flex: 1; min-height: 0; display: none; grid-template-columns: 1fr clamp(300px, 27vw, 420px); grid-template-rows: 1fr auto; gap: 16px clamp(32px, 3vw, 48px); }
   .projets.detail .index { display: none; } .projets.detail .fiche { display: grid; }
   /* Index typographique des projets */
   .index { display: flex; flex: 1; min-height: 0; flex-direction: column; justify-content: center; }
@@ -131,10 +131,14 @@
   .vignettes button img { height: 100%; width: auto; display: block; }
   .vignettes button:hover { opacity: .8; } .vignettes button[aria-current="true"] { opacity: 1; outline: 1px solid var(--accent); outline-offset: 2px; }
   .fiche .palette { display: flex; gap: 6px; margin-top: 10px; } .fiche .palette i { width: 22px; height: 22px; border-radius: 50%; }
-  .fiche .infos { display: flex; flex-direction: column; min-height: 0; }
+  .fiche .infos { display: flex; flex-direction: column; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
   .fiche .infos .sq { height: clamp(72px, 15vh, 160px); width: 100%; margin: 12px 0 18px; }
   #pj-num { font-size: 12px; }
-  .fiche .desc { margin: 0 0 16px; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.6; color: var(--gris2); text-wrap: pretty; }
+  .fiche .cadre { display: block; margin: -6px 0 18px; font-size: 13px; color: var(--blanc); }
+  .fiche .desc { margin: 0 0 18px; display: flex; flex-direction: column; gap: 6px; }
+  .fiche .desc h3 { font-weight: 500; font-size: 12px; color: var(--gris); margin-top: 8px; }
+  .fiche .desc h3:first-child { margin-top: 0; }
+  .fiche .desc p { font-size: clamp(14px, 1vw, 15.5px); line-height: 1.6; color: var(--gris2); text-wrap: pretty; }
   .fiche .outils { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; }
   .fiche .outils li, .puces li { font-size: 13px; color: var(--gris2); }
   .fiche .outils li + li::before, .puces li + li::before { content: '/'; margin-right: 8px; color: var(--gris); }
@@ -217,7 +221,10 @@
     .fiche .infos { display: contents; }
     #pj-num { order: 1; font-size: 10.5px; }
     .fiche .infos .sq { order: 2; height: 58px; margin: 0; flex: none; }
-    .fiche .desc { order: 2; margin: 0; font-size: 13.5px; line-height: 1.45; }
+    .fiche .cadre { order: 2; margin: 0; font-size: 12px; }
+    .fiche .desc { order: 2; margin: 0; gap: 4px; }
+    .fiche .desc p { font-size: 13.5px; line-height: 1.5; }
+    .fiche .desc h3 { margin-top: 4px; font-size: 11px; }
     .fiche .outils { order: 2; margin: 0; }
     .fiche .outils li, .puces li { font-size: 12px; }
     #pj-compte, .pellicule { display: none; }
@@ -308,7 +315,8 @@
         <div class="infos">
           <span class="label" id="pj-num"></span>
           <div class="sq" id="pj-titre"><span>Projet</span></div>
-          <p class="desc" id="pj-desc"></p>
+          <span class="cadre" id="pj-cadre"></span>
+          <div class="desc"><h3>La demande</h3><p id="pj-demande"></p><h3>Mes choix</h3><p id="pj-choix"></p></div>
           <ul class="outils" id="pj-outils" aria-label="Logiciels"></ul>
           <span class="label" id="pj-compte"></span>
           <dl class="tech" id="pj-tech"></dl>
@@ -379,6 +387,6 @@
   </section>
 </div>
 
-<script src="assets/volets.js?v=b23"></script>
+<script src="assets/volets.js?v=b24"></script>
 </body>
 </html>
