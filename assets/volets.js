@@ -7,9 +7,9 @@
 
   // Les vrais projets (page « image » du Figma) : [titre, catégorie, images [fichier, légende, 'video'?] — la 1re est le mockup, montré en grand —, couverture, palette?, fiche technique?]
   const PROJETS = [
-    ['Graines Électroniques', 'Identité de festival', [['895', 'En situation, mur urbain'], ['889', 'Affiche officielle'], ['890', 'Déclinaison'], ['894', 'Mockup écrans'], ['897', 'Post Instagram — soirée house'], ['896', 'Post Instagram — concert'], ['891', 'Billets']], '889'],
+    ['Graines Électroniques', 'Identité de festival', [['895', 'En situation, mur urbain'], ['889', 'Affiche officielle'], ['890', 'Déclinaison'], ['894', 'Mockup écrans'], ['897', 'Post Instagram, soirée house'], ['896', 'Post Instagram — concert'], ['891', 'Billets']], '889'],
     ['Le Jeu de Paume', 'Identité visuelle · bar', [['900', 'Logo et carte'], ['902', 'Logotype'], ['899', 'La façade'], ['918', 'Tablier'], ['920', 'Carte de table'], ['901', 'Sous-bocks']], '900', ['#005795', '#C8A550']],
-    ['Motion Design', 'Film d\'animation · DALYO3', [['guijaune', 'Film — 0:44', 'video']], 'guijaune', null, [['Durée', '0:44'], ['Format', '16:9 · 1080p'], ['Son', 'Oui'], ['Cadre', 'DALYO3 · WSP1']]],
+    ['Motion Design', 'Film d\'animation · DALYO3', [['guijaune', 'Film, 0:44', 'video']], 'guijaune', null, [['Durée', '0:44'], ['Format', '16:9 · 1080p'], ['Son', 'Oui'], ['Cadre', 'DALYO3 · WSP1']]],
     ['C3L3ST', 'Cover d\'album · vinyle', [['913', 'Vinyle, ambiance nocturne'], ['914', 'Cover'], ['915', 'Déclinaison paysage']], '914'],
     ['63OG', 'Cover d\'album · vinyle', [['910', 'Mockup vinyle'], ['911', 'Cover'], ['912', 'Bannière']], '911'],
     ['Toca Loco', 'Identité digitale', [['917', 'Application en main'], ['916', 'Écrans']], '917'],
@@ -98,12 +98,12 @@
 
   // ───── Projets : index + fiche (visionneuse) ─────
   $('#pellicule').innerHTML = PROJETS.map((p, i) =>
-    '<button style="--img:url(' + src(p[3]) + ')" data-i="' + i + '" aria-label="' + p[0] + '" data-af><span>' + nn(i) + '</span></button>').join('');
+    '<button style="--img:url(' + src(p[3]) + ')" data-i="' + i + '" aria-label="' + p[0] + '" data-af></button>').join('');
   $$('#pellicule button').forEach(b => b.addEventListener('click', () => { location.hash = '#/projets/' + nn(+b.dataset.i); }));
 
   // Index : une ligne par projet
   $('#index').innerHTML = PROJETS.map((p, i) =>
-    '<a href="#/projets/' + nn(i) + '" data-af><span class="n">' + nn(i) + '</span><span class="t">' + p[0] + '</span><span class="c">' + p[1] + '</span><span class="k">' + compte(p) + '</span><img class="vi" src="' + src(p[3]) + '" alt="" loading="lazy"></a>').join('');
+    '<a href="#/projets/' + nn(i) + '" data-af><span class="t">' + p[0] + '</span><span class="c">' + p[1] + '</span><span class="k">' + compte(p) + '</span><img class="vi" src="' + src(p[3]) + '" alt="" loading="lazy"></a>').join('');
 
   // Visionneuse : une image à la fois, en grand, avec les vignettes du projet
   let vue = 0;
@@ -115,7 +115,7 @@
     $('.fiche').classList.toggle('film', estVideo);
     if (estVideo) { v.poster = src(im[vue][0]); if (!v.src.endsWith(im[vue][0] + '.mp4')) { v.src = 'assets/projets/' + im[vue][0] + '.mp4'; arreterFilm(); } }
     else { arreterFilm(); v.removeAttribute('src'); v.load(); $('#sc-img').src = src(im[vue][0]); }
-    $('#sc-img').alt = PROJETS[projet][0] + ' — ' + im[vue][1];
+    $('#sc-img').alt = PROJETS[projet][0] + ', ' + im[vue][1];
     $('#sc-leg').innerHTML = '<b>' + nn(vue) + ' / ' + String(n).padStart(2, '0') + '</b>' + im[vue][1];
     $$('#sc-vign button').forEach((b, j) => b.setAttribute('aria-current', j === vue));
   }
@@ -137,7 +137,7 @@
   function fiche(i) {
     projet = i;
     const p = PROJETS[i];
-    $('#pj-num').textContent = 'P' + nn(i) + ' — ' + p[1];
+    $('#pj-num').textContent = p[1];
     $('#pj-titre span').textContent = p[0];
     $('#pj-compte').textContent = compte(p);
     $('#pj-desc').textContent = TEXTES[i][0];
@@ -148,7 +148,7 @@
     $$('#sc-vign button').forEach(b => b.addEventListener('click', () => montrer(+b.dataset.k)));
     montrer(0);
     $$('#pellicule button').forEach(b => b.setAttribute('aria-current', +b.dataset.i === i));
-    $('#pj-fil').textContent = '01 — Projets / ' + p[0];
+    $('#pj-fil').textContent = p[0];
   }
   const allerProjet = d => { location.hash = '#/projets/' + nn((projet + d + NB) % NB); };
   $('#pj-prec').addEventListener('click', () => allerProjet(-1));
@@ -175,7 +175,7 @@
     pj.classList.toggle('detail', r.i !== undefined);
     $('#vers-planche').hidden = r.i === undefined;
     if (r.i === undefined) arreterFilm();
-    if (r.i !== undefined) fiche(r.i); else $('#pj-fil').textContent = '01 — Projets · ' + NB + ' projets';
+    if (r.i !== undefined) fiche(r.i); else $('#pj-fil').textContent = NB + ' projets';
     document.title = (r.v === 'accueil' ? '' : (r.i !== undefined ? PROJETS[r.i][0] : $('.volet.ouvert .titre').textContent) + ' — ') + 'Mathys Chabanel';
     const v = $('.volet.ouvert');
     // les titres écrasés se recalent une fois le volet déplié
@@ -211,25 +211,9 @@
     setTimeout(() => { $('#copier-etat').textContent = 'Clic pour copier l\'adresse'; }, 1800);
   });
 
-  // ───── Cadre de mise au point ─────
-  const af = $('#af'), box = { x: 0, y: 0, w: 0, h: 0 };
-  let cible = null;
-  const viser = t => { cible = t; af.classList.toggle('on', !!t); };
-  document.addEventListener('mouseover', e => viser(e.target.closest('[data-af]')));
-  document.addEventListener('focusin', e => viser(e.target.closest('[data-af]')));
-
   // ───── Boucle ─────
-  const t0 = performance.now();
-  const pad = n => String(Math.floor(n)).padStart(2, '0');
-  function frame(now) {
-    const s = (now - t0) / 1000, tc = 'REC ' + pad(s / 3600) + ':' + pad(s / 60 % 60) + ':' + pad(s % 60);
+  function frame() {
     const ouvert = $('.volet.ouvert');
-    if (ouvert) { const rec = ouvert.querySelector('[data-rec]'); if (rec) rec.textContent = tc; }
-    if (cible && cible.isConnected) {
-      const r = cible.getBoundingClientRect(), k = box.w ? .3 : 1;
-      box.x += (r.left - 6 - box.x) * k; box.y += (r.top - 6 - box.y) * k; box.w += (r.width + 12 - box.w) * k; box.h += (r.height + 12 - box.h) * k;
-      af.style.transform = 'translate(' + box.x + 'px,' + box.y + 'px)'; af.style.width = box.w + 'px'; af.style.height = box.h + 'px';
-    }
     if (ouvert && ouvert.dataset.v === 'accueil') dessinerNom();
     requestAnimationFrame(frame);
   }

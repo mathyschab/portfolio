@@ -27,7 +27,7 @@
      Les 5 sections sont des volets verticaux toujours visibles ; celui qu'on ouvre prend la place, les autres se replient en tranches. */
   :root {
     --noir: #0B0B0C; --noir2: #121214; --blanc: #ECEBE7; --gris: #7C7C80; --gris2: #C9C8C3; --trait: #29292C;
-    --accent: #C9A55A; --rec: #FF3B2F; --tranche: 72px; --pad: clamp(20px, 3vw, 44px);
+    --accent: #FFFFFF; --tranche: 72px; --pad: clamp(20px, 3vw, 44px);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -36,7 +36,7 @@
   a, button { color: inherit; text-decoration: none; background: none; border: 0; font: inherit; cursor: pointer; }
   [hidden] { display: none !important; }
   :focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
-  .label { font-weight: 400; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); }
+  .label { font-weight: 400; font-size: 12px; letter-spacing: .01em; color: var(--gris); }
   .sq { position: relative; display: block; }
   .sq > span { position: absolute; left: 0; top: 0; transform-origin: 0 0; white-space: nowrap; font-weight: 100; font-size: 100px; line-height: 1; text-transform: uppercase; }
   .grain { position: fixed; inset: -50%; background: url(assets/grain.png); opacity: .08; pointer-events: none; z-index: 90; animation: fourmille .5s steps(6) infinite; }
@@ -49,26 +49,23 @@
   .volet:last-child { border-right: 0; }
   .volet.ouvert { flex: 1 1 0; }
   /* La tranche : toujours visible, c'est la navigation */
-  .tranche { flex: 0 0 var(--tranche); height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 22px 0; transition: background .3s, color .3s; position: relative; }
+  .tranche { flex: 0 0 var(--tranche); height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 22px 0; transition: background .3s, color .3s; position: relative; }
   .tranche:hover { background: var(--noir2); }
-  .tranche .n { font-weight: 400; font-size: 11px; letter-spacing: .14em; color: var(--gris); }
   .tranche .titre { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 100; font-size: 34px; letter-spacing: .02em; text-transform: uppercase; white-space: nowrap; transition: font-weight .25s, color .25s; }
   .tranche:hover .titre { font-weight: 300; }
-  .tranche .fl { font-weight: 100; font-size: 22px; color: var(--gris); transition: transform .3s, color .3s; }
+  .tranche .fl { position: absolute; bottom: 22px; font-weight: 100; font-size: 22px; color: var(--gris); transition: transform .3s, color .3s; }
   .tranche:hover .fl { transform: translateX(3px); color: var(--accent); }
   .volet.ouvert .tranche { border-right: 1px solid var(--trait); }
   .volet.ouvert .tranche::after { content: ''; position: absolute; right: -1px; top: 22px; bottom: 22px; width: 1px; background: var(--accent); }
-  .volet.ouvert .tranche .titre { color: var(--accent); }
+  .volet.ouvert .tranche .titre { color: var(--blanc); font-weight: 400; }
   .volet.ouvert .tranche .fl { opacity: 0; }
   /* Le contenu : apparaît une fois le volet ouvert */
   .contenu { position: relative; flex: 1; min-width: 0; height: 100%; padding: var(--pad); display: flex; flex-direction: column; opacity: 0; visibility: hidden; transition: opacity .3s, visibility 0s .3s; }
   .volet.ouvert .contenu { opacity: 1; visibility: visible; transition: opacity .45s .35s, visibility 0s; }
   .entete { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: clamp(14px, 3vh, 28px); flex: none; min-height: 32px; }
   .entete .gauche { display: flex; align-items: center; gap: 14px; }
-  .rec { display: flex; align-items: center; gap: 8px; font-weight: 400; font-size: 11px; letter-spacing: .16em; }
-  .rec::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--rec); animation: clign 1s steps(2) infinite; }
-  @keyframes clign { 50% { opacity: 0; } }
-  .pill { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border: 1px solid #3a3a3e; border-radius: 999px; font-weight: 400; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; transition: background .2s, color .2s; }
+  /* Tout ce qui est cliquable : un rectangle net à bordure blanche, qui s'inverse au survol */
+  .pill { display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; border: 1px solid var(--blanc); border-radius: 0; font-weight: 500; font-size: 13px; letter-spacing: .01em; transition: background .2s, color .2s; }
   .pill:hover { background: var(--blanc); color: var(--noir); }
   .pill.plein { background: var(--blanc); color: var(--noir); border-color: var(--blanc); }
   .pill[hidden] { display: none; }
@@ -88,7 +85,7 @@
   .presentation .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; font-size: 13.5px; line-height: 1.6; color: var(--gris2); }
   .presentation .droite { display: flex; flex-direction: column; gap: 16px; }
   .presentation dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 14px; font-size: 13px; }
-  .presentation dt { font-weight: 400; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); padding-top: 3px; }
+  .presentation dt { font-size: 12px; color: var(--gris); padding-top: 3px; }
   .bandeau { display: inline-flex; flex-direction: column; gap: 2px; padding: 9px 14px 11px; background: #161618; align-self: flex-start; }
   .bandeau b { font-weight: 500; font-size: 16px; letter-spacing: -.02em; } .bandeau b i { font-style: normal; font-weight: 100; color: var(--accent); }
   .bandeau small { font-weight: 400; font-size: 11px; }
@@ -102,14 +99,13 @@
   .projets.detail .index { display: none; } .projets.detail .fiche { display: grid; }
   /* Index typographique des projets */
   .index { display: flex; flex: 1; min-height: 0; flex-direction: column; justify-content: center; }
-  .index a { display: grid; grid-template-columns: 48px 1fr auto 90px; align-items: baseline; gap: 20px; padding: clamp(4px, 1.2vh, 12px) 0; border-top: 1px solid var(--trait); }
+  .index a { display: grid; grid-template-columns: 1fr auto 90px; align-items: baseline; gap: 20px; padding: clamp(4px, 1.2vh, 12px) 0; border-top: 1px solid var(--trait); }
   .index a:last-child { border-bottom: 1px solid var(--trait); }
   .index .t { font-weight: 100; font-size: clamp(30px, 8.4vh, 88px); line-height: 1.05; letter-spacing: -.02em; transform-origin: left center; transition: transform .35s cubic-bezier(.2, .9, .2, 1.1), color .2s; white-space: nowrap; }
-  .index .n, .index .c, .index .k { font-weight: 400; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); }
+  .index .c, .index .k { font-weight: 400; font-size: 13px; color: var(--gris); }
   .index .k { text-align: right; }
   .index .vi { display: none; }
   .index a:hover .t { color: var(--accent); transform: translateX(14px) scaleY(1.12); }
-  .index a:hover .n { color: var(--accent); }
   .index:hover a:not(:hover) .t { opacity: .35; }
   .scene { display: grid; min-height: 0; grid-template-rows: 1fr auto; gap: 14px; }
   .scene figure { margin: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: e-resize; }
@@ -127,7 +123,7 @@
   .ecran.joue .lire { display: none; }
   .fiche .tech { display: none; grid-template-columns: auto 1fr; gap: 9px 16px; margin: 4px 0 0; font-size: 14px; }
   .fiche.film .tech { display: grid; } .fiche.film #pj-compte { display: none; }
-  .fiche .tech dt { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); padding-top: 2px; }
+  .fiche .tech dt { font-size: 12px; color: var(--gris); padding-top: 2px; }
   .fiche .tech dd { margin: 0; color: var(--gris2); }
   .scene figcaption b { color: var(--accent); font-weight: 400; margin-right: 8px; }
   .vignettes { display: flex; gap: 8px; height: clamp(40px, 7vh, 64px); justify-content: center; }
@@ -140,11 +136,11 @@
   #pj-num { font-size: 12px; }
   .fiche .desc { margin: 0 0 16px; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.6; color: var(--gris2); text-wrap: pretty; }
   .fiche .outils { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; }
-  .fiche .outils li { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--blanc); border: 1px solid #3A3A3A; border-radius: 999px; padding: 6px 12px; }
+  .fiche .outils li, .puces li { font-size: 13px; color: var(--gris2); }
+  .fiche .outils li + li::before, .puces li + li::before { content: '/'; margin-right: 8px; color: var(--gris); }
   .fiche .nav { margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding-top: 14px; }
   .pellicule { grid-column: 1 / 3; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; height: clamp(30px, 5vh, 44px); }
   .pellicule button { position: relative; background: var(--img) center / cover; opacity: .4; transition: opacity .2s; }
-  .pellicule button span { position: absolute; left: 6px; top: 4px; font-weight: 400; font-size: 9px; letter-spacing: .1em; }
   .pellicule button:hover { opacity: .8; }
   .pellicule button[aria-current="true"] { opacity: 1; outline: 1px solid var(--accent); outline-offset: 2px; }
 
@@ -155,27 +151,25 @@
   .u-intro .pave { font-weight: 200; font-size: clamp(15px, 1.15vw, 18px); line-height: 1.6; color: var(--gris2); text-wrap: pretty; }
   .u-intro .pave::first-line { color: var(--blanc); }
   .u-fiche { display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; font-size: 13px; }
-  .u-fiche dt { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); padding-top: 2px; }
+  .u-fiche dt { font-size: 12px; color: var(--gris); padding-top: 2px; }
   .u-intro .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; }
   .u-bloc { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
   .u-liste { margin: 0; padding: 0; list-style: none; border-bottom: 1px solid var(--trait); }
-  .u-liste li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 10px; padding: clamp(10px, 1.8vh, 16px) 4px; border-top: 1px solid var(--trait); }
-  .u-liste .n { grid-row: 1 / 3; font-size: 11px; letter-spacing: .14em; color: var(--gris); padding-top: 4px; font-variant-numeric: tabular-nums; }
+  .u-liste li { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; padding: clamp(10px, 1.8vh, 16px) 4px; border-top: 1px solid var(--trait); }
   .u-liste b { font-weight: 300; font-size: clamp(16px, 1.25vw, 19px); color: var(--blanc); }
   .u-liste .d { font-size: 13px; line-height: 1.5; color: var(--gris2); text-wrap: pretty; }
-  .u-liste a { color: var(--blanc); border-bottom: 1px solid #3a3a3e; transition: color .2s, border-color .2s; }
-  .u-liste a em { font-style: normal; color: var(--accent); }
-  .u-liste a:hover { color: var(--accent); border-color: var(--accent); }
+  .u-liste a { color: var(--blanc); border-bottom: 1px solid var(--blanc); transition: color .2s, border-color .2s; }
+  .u-liste a em { font-style: normal; }
+  .u-liste a:hover { background: var(--blanc); color: var(--noir); }
   .puces { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
-  .puces li { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; border: 1px solid #3A3A3A; border-radius: 999px; padding: 6px 12px; }
 
   /* Carte « bande-son » : accueil et fiches projet */
-  .bande-son { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 10px 12px; border: 1px solid #3a3a3e; transition: border-color .2s; }
-  .bande-son:hover { border-color: var(--accent); }
+  .bande-son { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 10px 12px; border: 1px solid var(--blanc); transition: background .2s, color .2s; }
+  .bande-son:hover { background: var(--blanc); color: var(--noir); } .bande-son:hover .label, .bande-son:hover .f { color: var(--noir); }
   .bande-son .mini { width: 40px; height: 40px; flex: none; background: url(https://cdn-images.dzcdn.net/images/cover/1b31d20526c3805bc36c22fec3409d89/250x250-000000-80-0-0.jpg) center / cover; }
-  .bande-son b { display: block; font-weight: 300; font-size: 15px; } .bande-son b em { font-style: normal; color: var(--accent); }
+  .bande-son b { display: block; font-weight: 400; font-size: 15px; } .bande-son b em { font-style: normal; }
   .bande-son .label { font-size: 10px; }
-  .bande-son .f { margin-left: auto; font-weight: 100; font-size: 20px; color: var(--accent); }
+  .bande-son .f { margin-left: auto; font-weight: 300; font-size: 20px; }
 
   /* Contact : l'email en grand, les liens en liste */
   .contact .corps { flex: 1; min-height: 0; display: grid; grid-template-rows: auto 1fr; gap: clamp(16px, 4vh, 40px); }
@@ -185,14 +179,12 @@
   .mail:hover .sq > span { color: var(--accent); }
   .mail .etat { display: block; margin-top: 10px; }
   .liens { display: flex; flex-direction: column; justify-content: flex-end; }
-  .liens a { display: grid; grid-template-columns: 56px 1fr 1fr 40px; align-items: center; padding: clamp(10px, 2vh, 18px) 0; border-top: 1px solid var(--trait); transition: padding .25s; }
+  .liens a { display: grid; grid-template-columns: 1fr 1fr 40px; align-items: center; padding: clamp(10px, 2vh, 18px) 0; border-top: 1px solid var(--trait); transition: padding .25s; }
   .liens a:last-child { border-bottom: 1px solid var(--trait); }
   .liens a b { font-weight: 100; font-size: clamp(24px, 3.6vh, 38px); }
   .liens a .f { font-weight: 100; font-size: 24px; text-align: right; transition: transform .25s, color .25s; }
   .liens a:hover { padding-left: 14px; } .liens a:hover .f { color: var(--accent); transform: translateX(4px); }
 
-  #af { position: fixed; left: 0; top: 0; z-index: 45; pointer-events: none; border: 1px solid var(--accent); border-radius: 10px; opacity: 0; transition: opacity .2s; }
-  #af.on { opacity: .8; }
 
   /* Écran étroit : les volets s'empilent (tranches horizontales) */
   @media (max-width: 860px) {
@@ -202,7 +194,7 @@
     .tranche .titre { writing-mode: horizontal-tb; transform: none; font-size: 24px; }
     .volet.ouvert .tranche::after { display: none; }
     .contenu { overflow-y: auto; height: auto; }
-    .index .c, .index .k { display: none; } .index a { grid-template-columns: 36px 1fr; }
+    .index .c, .index .k { display: none; } .index a { grid-template-columns: 1fr; }
     .fiche, .presentation, .atelier .corps { grid-template-columns: 1fr !important; }
     #pochette { max-width: 100%; height: auto; width: 100%; }
   }
@@ -211,15 +203,14 @@
     .volet { flex-basis: 44px; }
     .tranche { flex-basis: 44px; padding: 0 20px; gap: 14px; }
     .tranche .titre { flex: 1; font-size: 20px; text-align: left; }
+    .tranche .fl { position: static; }
     .contenu { padding: 14px 20px 12px; }
     .entete { margin-bottom: 10px; min-height: 28px; }
     .projets.detail #pj-fil { display: none; }
-    .rec { font-size: 9px; }
     .index { justify-content: flex-start; }
-    .index a { grid-template-columns: 30px 1fr; gap: 2px 0; padding: 10px 0; }
-    .index .n { grid-row: 1 / 3; padding-top: 8px; }
+    .index a { grid-template-columns: 1fr; gap: 2px 0; padding: 10px 0; }
     .index .t { font-size: 28px; overflow: hidden; text-overflow: ellipsis; }
-    .index .c { display: block; grid-column: 2; font-size: 9px; }
+    .index .c { display: block; font-size: 11px; }
     .index .k { display: none; }
     .index a:hover .t { transform: translateX(8px); }
     .projets.detail .fiche { display: flex; flex-direction: column; gap: 10px; }
@@ -228,7 +219,7 @@
     .fiche .infos .sq { order: 2; height: 58px; margin: 0; flex: none; }
     .fiche .desc { order: 2; margin: 0; font-size: 13.5px; line-height: 1.45; }
     .fiche .outils { order: 2; margin: 0; }
-    .fiche .outils li { font-size: 10px; padding: 5px 10px; }
+    .fiche .outils li, .puces li { font-size: 12px; }
     #pj-compte, .pellicule { display: none; }
     .scene { order: 3; flex: 1; min-height: 0; gap: 10px; }
     .vignettes { height: 40px; overflow-x: auto; justify-content: flex-start; }
@@ -239,7 +230,6 @@
     #pj-palette:empty { display: none; }
     .fiche .nav { order: 5; flex-direction: row; justify-content: space-between; padding-top: 0; margin-top: 0; }
     /* Accueil : nom plus court, portrait + phrase d'accroche côte à côte, le reste en colonne */
-    .accueil .entete .indice, .accueil .droite .rec { display: none; }
     .accueil .nom { height: 15vh; }
     .presentation { grid-template-columns: 92px 1fr !important; gap: 12px 14px; align-items: start; align-content: start; padding-top: 12px; margin-top: 12px; overflow: hidden; }
     .presentation .texte { display: contents; }
@@ -260,37 +250,34 @@
     .u-fiche { font-size: 12px; gap: 6px 14px; }
     .u-intro .actions .pill { padding: 7px 12px; font-size: 10px; }
     .u-bloc { gap: 10px; }
-    .u-liste li { grid-template-columns: 28px minmax(0, 1fr); padding: 9px 2px; }
+    .u-liste li { padding: 9px 2px; }
     .u-liste b { font-size: 15px; }
     .u-liste .d { font-size: 12px; }
-    .puces li { font-size: 10px; padding: 5px 10px; }
     /* Contact : l'adresse tient dans la largeur, liens compacts */
     .contact .corps { grid-template-columns: minmax(0, 1fr); gap: 16px; }
     .mail .sq { height: 44px; }
-    .liens a { grid-template-columns: 30px minmax(0, 1fr) 24px; padding: 12px 0; }
-    .liens a .label:nth-of-type(2) { display: none; }
+    .liens a { grid-template-columns: minmax(0, 1fr) 24px; padding: 12px 0; }
+    .liens a .label { display: none; }
     .liens a b { font-size: 26px; }
     .liens a:hover { padding-left: 0; }
   }
-  @media (prefers-reduced-motion: reduce) { .grain, .rec::before, .indice .fleche { animation: none; } .volet, .contenu { transition: none !important; } }
+  @media (prefers-reduced-motion: reduce) { .grain { animation: none; } .volet, .contenu { transition: none !important; } }
 </style>
 </head>
 <body>
 <div class="grain"></div>
-<div id="af"></div>
 
 <div class="volets">
   <!-- 00 Biographie : le nom + la présentation (ancien « À propos ») -->
   <section class="volet accueil" data-v="accueil">
-    <a class="tranche" href="#/" data-af><span class="n">00</span><span class="titre">Biographie</span><span class="fl">→</span></a>
+    <a class="tranche" href="#/" data-af><span class="titre">Biographie</span><span class="fl">→</span></a>
     <div class="contenu">
-      <div class="entete"><span class="label">Portfolio 2026 — graphisme & direction artistique</span><span class="indice label">Ouvre un volet <span class="fleche">→</span></span></div>
+      <div class="entete"><span class="label">Portfolio 2026 · graphisme et direction artistique</span></div>
       <h1 class="sr">Mathys Chabanel — portfolio de graphisme et direction artistique</h1>
       <div class="nom" id="nom"></div>
       <div class="presentation">
         <div class="portrait" role="img" aria-label="Portrait de Mathys Chabanel"></div>
         <div class="texte">
-          <span class="label">Notes de pochette</span>
           <p class="lead">Passionné par la musique et la création visuelle, je puise mon inspiration dans la scène musicale <em>underground</em>.</p>
           <div class="cols">
             <p>À travers les clips, les pochettes d'albums et les univers graphiques qui les accompagnent. J'aime travailler les textures avec du grain, déformer et écraser les typographies.</p>
@@ -299,8 +286,7 @@
         </div>
         <div class="droite">
           <dl><dt>École</dt><dd>Brassart Lyon · 3e année</dd><dt>Recherche</dt><dd>Stage 2 à 3 mois · janv. → mars 2027</dd><dt>Outils</dt><dd>Photoshop, Illustrator, InDesign, Figma</dd><dt>Domaines</dt><dd>Création, mise en page, identité visuelle, édition</dd></dl>
-          <a class="bande-son" href="#/univers" data-af><span><span class="label">02 — Univers</span><b>Mes <em>skills</em> &amp; ce qui m'inspire</b></span><span class="f">→</span></a>
-          <span class="rec" data-rec>REC 00:00:00</span>
+          <a class="bande-son" href="#/univers" data-af><span><span class="label">Univers</span><b>Mes skills et ce qui m'inspire</b></span><span class="f">→</span></a>
         </div>
       </div>
     </div>
@@ -308,11 +294,10 @@
 
   <!-- 01 Projets -->
   <section class="volet projets" data-v="projets">
-    <a class="tranche" href="#/projets" data-af><span class="n">01</span><span class="titre">Projets</span><span class="fl">→</span></a>
+    <a class="tranche" href="#/projets" data-af><span class="titre">Projets</span><span class="fl">→</span></a>
     <div class="contenu">
       <div class="entete">
-        <div class="gauche"><button class="pill" id="vers-planche" hidden data-af>◀◀ Index</button><span class="label" id="pj-fil">01 — Projets · 7 projets</span></div>
-        <span class="rec" data-rec>REC 00:00:00</span>
+        <div class="gauche"><button class="pill" id="vers-planche" hidden data-af>← Tous les projets</button><span class="label" id="pj-fil">8 projets</span></div>
       </div>
       <div class="index" id="index"></div>
       <div class="fiche">
@@ -337,9 +322,8 @@
 
   <!-- 02 Univers : ce que je sais faire (skills) + le monde qui m'entoure (centres d'intérêt) — remplace l'ancien volet Playlist -->
   <section class="volet univers" data-v="univers">
-    <a class="tranche" href="#/univers" data-af><span class="n">02</span><span class="titre">Univers</span><span class="fl">→</span></a>
+    <a class="tranche" href="#/univers" data-af><span class="titre">Univers</span><span class="fl">→</span></a>
     <div class="contenu">
-      <div class="entete"><span class="label">02 — Skills &amp; le monde qui m'entoure</span><span class="rec" data-rec>REC 00:00:00</span></div>
       <div class="corps">
         <div class="u-intro">
           <div class="sq" id="u-sq"><span>Univers</span></div>
@@ -356,22 +340,22 @@
         <div class="u-bloc">
           <span class="label">Ce que je sais faire</span>
           <ol class="u-liste">
-            <li><span class="n">01</span><b>Identité visuelle</b><span class="d">Logos, chartes et déclinaisons, du bar au food truck.</span></li>
-            <li><span class="n">02</span><b>Direction artistique</b><span class="d">Covers d'albums, affiches : poser une ambiance et la tenir.</span></li>
-            <li><span class="n">03</span><b>Typographie &amp; composition</b><span class="d">Grain, contrastes, typos déformées et écrasées.</span></li>
-            <li><span class="n">04</span><b>Mise en page &amp; édition</b><span class="d">Flyers, menus, supports de communication.</span></li>
-            <li><span class="n">05</span><b>Motion design</b><span class="d">Animer une identité, du storyboard au film.</span></li>
+            <li><b>Identité visuelle</b><span class="d">Logos, chartes et déclinaisons, du bar au food truck.</span></li>
+            <li><b>Direction artistique</b><span class="d">Covers d'albums, affiches : poser une ambiance et la tenir.</span></li>
+            <li><b>Typographie &amp; composition</b><span class="d">Grain, contrastes, typos déformées et écrasées.</span></li>
+            <li><b>Mise en page &amp; édition</b><span class="d">Flyers, menus, supports de communication.</span></li>
+            <li><b>Motion design</b><span class="d">Animer une identité, du storyboard au film.</span></li>
           </ol>
           <ul class="puces" aria-label="Logiciels"><li>Photoshop</li><li>Illustrator</li><li>InDesign</li><li>Figma</li><li>After Effects</li><li>Claude Code</li></ul>
         </div>
         <div class="u-bloc">
           <span class="label">Le monde qui m'entoure</span>
           <ol class="u-liste">
-            <li><span class="n">01</span><b>Musique</b><span class="d">La scène underground, ses clips et ses pochettes. En ce moment : <a href="https://www.deezer.com/fr/album/1029375272" target="_blank" rel="noopener" data-af><em>Dancing In The Rain</em> — 63KLUF ↗</a></span></li>
-            <li><span class="n">02</span><b>Jeux vidéo</b><span class="d">Des mondes entiers construits par l'image et l'interface.</span></li>
-            <li><span class="n">03</span><b>Mode</b><span class="d">Le vêtement comme signe, et tout l'univers visuel autour.</span></li>
-            <li><span class="n">04</span><b>Design</b><span class="d">Affiches, typos, studios : je regarde, je garde, je recompose.</span></li>
-            <li><span class="n">05</span><b>Voyage</b><span class="d">Les villes, leurs enseignes et leurs couleurs.</span></li>
+            <li><b>Musique</b><span class="d">La scène underground, ses clips et ses pochettes. En ce moment : <a href="https://www.deezer.com/fr/album/1029375272" target="_blank" rel="noopener" data-af><em>Dancing In The Rain</em> de 63KLUF ↗</a></span></li>
+            <li><b>Jeux vidéo</b><span class="d">Des mondes entiers construits par l'image et l'interface.</span></li>
+            <li><b>Mode</b><span class="d">Le vêtement comme signe, et tout l'univers visuel autour.</span></li>
+            <li><b>Design</b><span class="d">Affiches, typos, studios : je regarde, je garde, je recompose.</span></li>
+            <li><b>Voyage</b><span class="d">Les villes, leurs enseignes et leurs couleurs.</span></li>
           </ol>
         </div>
       </div>
@@ -380,22 +364,21 @@
 
   <!-- 03 Contact -->
   <section class="volet contact" data-v="contact">
-    <a class="tranche" href="#/contact" data-af><span class="n">03</span><span class="titre">Contact</span><span class="fl">→</span></a>
+    <a class="tranche" href="#/contact" data-af><span class="titre">Contact</span><span class="fl">→</span></a>
     <div class="contenu">
-      <div class="entete"><span class="label">03 — Contact</span><span class="rec" data-rec>REC 00:00:00</span></div>
       <div class="corps">
         <button class="mail" id="copier" data-af><span class="sq" id="mail-sq"><span>chabanel.mathys@gmail.com</span></span><span class="label etat" id="copier-etat">Clic pour copier l'adresse</span></button>
         <nav class="liens" aria-label="Liens">
-          <a href="docs/CV-Mathys-Chabanel.pdf?v=2" download="CV-Mathys-Chabanel.pdf" data-af><span class="label">01</span><b>CV</b><span class="label">Télécharger le PDF</span><span class="f">↓</span></a>
-          <a href="https://www.instagram.com/mathys.design/" target="_blank" rel="noopener" data-af><span class="label">02</span><b>Instagram</b><span class="label">@mathys.design</span><span class="f">↗</span></a>
-          <a href="https://www.behance.net/mathyschabanel" target="_blank" rel="noopener" data-af><span class="label">03</span><b>Behance</b><span class="label">behance.net/mathyschabanel</span><span class="f">↗</span></a>
-          <a href="https://www.linkedin.com/feed/" target="_blank" rel="noopener" data-af><span class="label">04</span><b>LinkedIn</b><span class="label">Mathys Chabanel</span><span class="f">↗</span></a>
+          <a href="docs/CV-Mathys-Chabanel.pdf?v=2" download="CV-Mathys-Chabanel.pdf" data-af><b>CV</b><span class="label">Télécharger le PDF</span><span class="f">↓</span></a>
+          <a href="https://www.instagram.com/mathys.design/" target="_blank" rel="noopener" data-af><b>Instagram</b><span class="label">@mathys.design</span><span class="f">↗</span></a>
+          <a href="https://www.behance.net/mathyschabanel" target="_blank" rel="noopener" data-af><b>Behance</b><span class="label">behance.net/mathyschabanel</span><span class="f">↗</span></a>
+          <a href="https://www.linkedin.com/feed/" target="_blank" rel="noopener" data-af><b>LinkedIn</b><span class="label">Mathys Chabanel</span><span class="f">↗</span></a>
         </nav>
       </div>
     </div>
   </section>
 </div>
 
-<script src="assets/volets.js?v=b22"></script>
+<script src="assets/volets.js?v=b23"></script>
 </body>
 </html>
