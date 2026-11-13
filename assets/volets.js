@@ -12,7 +12,7 @@
     ['Motion Design', 'Film d\'animation · DALYO3', [['guijaune', 'Film, 0:44', 'video']], 'guijaune', null, [['Durée', '0:44'], ['Format', '16:9 · 1080p'], ['Son', 'Oui'], ['Cadre', 'DALYO3 · WSP1']]],
     ['C3L3ST', 'Cover d\'album · vinyle', [['913', 'Vinyle, ambiance nocturne'], ['914', 'Cover'], ['915', 'Déclinaison paysage']], '914'],
     ['63OG', 'Cover d\'album · vinyle', [['910', 'Mockup vinyle'], ['911', 'Cover'], ['912', 'Bannière']], '911'],
-    ['Toca Loco', 'Site web · food truck mexicain', [['917', 'Application en main'], ['916', 'Écrans']], '917'],
+    ['Toca Loco', 'Site web · food truck mexicain', [['tocaloco', 'Vidéo de présentation, 0:24', 'video'], ['917', 'Application en main'], ['916', 'Écrans']], '917'],
     ['Dancing In The Rain', 'Affiche · 63KLUF', [['907', 'En situation, rue'], ['905', 'Affiche'], ['906', 'Détail']], '905'],
     ['Obscura', 'Affiche lo-fi', [['908', 'En situation, mur décrépi'], ['909', 'Affiche']], '909']
   ];
@@ -54,7 +54,7 @@
   const NB = PROJETS.length;
   const src = id => 'assets/projets/' + id + '.jpg';
   const nn = i => String(i + 1).padStart(2, '0');
-  const compte = p => p[2][0][2] === 'video' ? 'Vidéo' : p[2].length + ' visuels';
+  const compte = p => { const nv = p[2].filter(x => x[2] === 'video').length, ni = p[2].length - nv; return [nv ? 'Vidéo' : '', ni ? ni + ' visuels' : ''].filter(Boolean).join(' + '); };
   const ORDRE = ['accueil', 'projets', 'univers', 'contact'];   // « À propos » est fusionné dans le premier volet
 
   // ───── Typo écrasée ─────
@@ -137,6 +137,7 @@
     const v = $('#sc-vid'), estVideo = im[vue][2] === 'video';
     $('#sc-img').hidden = estVideo; $('#sc-ecran').hidden = !estVideo;
     $('.fiche').classList.toggle('film', estVideo);
+    $('.fiche').classList.toggle('solo', im.length === 1);   // un film seul : pas de vignettes
     if (estVideo) { v.poster = src(im[vue][0]); if (!v.src.endsWith(im[vue][0] + '.mp4')) { v.src = 'assets/projets/' + im[vue][0] + '.mp4'; arreterFilm(); } }
     else { arreterFilm(); v.removeAttribute('src'); v.load(); $('#sc-img').src = src(im[vue][0]); }
     $('#sc-img').alt = PROJETS[projet][0] + ', ' + im[vue][1];
