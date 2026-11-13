@@ -9,7 +9,7 @@
   const PROJETS = [
     ['Graines Électroniques', 'Identité de festival', [['895', 'En situation, mur urbain'], ['889', 'Affiche officielle'], ['890', 'Déclinaison'], ['894', 'Mockup écrans'], ['897', 'Post Instagram, soirée house'], ['896', 'Post Instagram — concert'], ['891', 'Billets']], '889'],
     ['Le Jeu de Paume', 'Identité visuelle · bar', [['900', 'Logo et carte'], ['902', 'Logotype'], ['899', 'La façade'], ['918', 'Tablier'], ['920', 'Carte de table'], ['901', 'Sous-bocks']], '900', ['#005795', '#C8A550']],
-    ['Motion Design', 'Film d\'animation · DALYO3', [['guijaune', 'Film, 0:44', 'video']], 'guijaune', null, [['Durée', '0:44'], ['Format', '16:9 · 1080p'], ['Son', 'Oui'], ['Cadre', 'DALYO3 · WSP1']]],
+    ['Motion Design', 'Film d\'animation · DALYO3', [['guijaune', 'Film, 0:44', 'video']], 'guijaune', null, [['Durée', '0:44'], ['Format', '16:9 · 1080p']]],
     ['Toca Loco', 'Site web · food truck mexicain', [['tocaloco', 'Vidéo de présentation, 0:24', 'video'], ['917', 'Application en main'], ['916', 'Écrans']], '917'],
     ['C3L3ST', 'Cover d\'album · vinyle', [['913', 'Vinyle, ambiance nocturne'], ['914', 'Cover'], ['915', 'Déclinaison paysage']], '914'],
     ['63OG', 'Cover d\'album · vinyle', [['910', 'Mockup vinyle'], ['911', 'Cover'], ['912', 'Bannière']], '911'],
