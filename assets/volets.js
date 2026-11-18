@@ -1,5 +1,5 @@
-// « Volets » — variante du Lecteur en accordéon (4 volets : le premier réunit le nom et l'à propos). Routes : #/ · #/projets · #/projets/04 · #/univers · #/contact (#/playlist → #/univers)
-// Clavier : ← → volet précédent / suivant (ou projet précédent / suivant dans une fiche) · ↑ ↓ image dans la visionneuse · 0–3 volets · Échap retour
+// « Volets » — variante du Lecteur en accordéon (4 volets : le premier réunit le nom et l'à propos). Routes : #/ · #/projets · #/projets/04 · #/principes · #/principes/02 · #/contact (#/univers et #/playlist → #/principes)
+// Clavier : ← → volet précédent / suivant (ou projet / principe précédent / suivant) · ↑ ↓ image dans la visionneuse · 0–3 volets · Échap retour
 (() => {
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
@@ -51,11 +51,22 @@
      'Le violet évoque l\'univers lo-fi, tandis que le noir et blanc appliqué aux artistes renvoie à l\'opium. Le grain, fil conducteur de mon travail, relie l\'ensemble.',
      ['Photoshop', 'Illustrator']]
   ];
+  // Principes (choisis avec Mathys, textes tirés de ses « Mes choix » — à corriger par lui) :
+  // [ligne 1, ligne 2 du titre écrasé, explication, projets où on le voit (index dans PROJETS), image, légende]
+  const PRINCIPES = [
+    ['Partir de', 'la musique', 'Mon inspiration vient souvent de l\'univers visuel des clips de rap : leur grain, leurs couleurs, leur intensité. C\'est le point de départ de la plupart de mes projets, des pochettes aux affiches.', [5, 4, 0], '911', '63OG, cover'],
+    ['Le grain', 'comme signature', 'Le grain est le fil conducteur de mon travail. Présent dans une grande partie de mes projets, il ancre chaque image dans ma direction artistique et les relie entre elles.', [4, 7, 0], '914', 'C3L3ST, cover'],
+    ['Une couleur,', 'une raison', 'Je choisis chaque teinte pour ce qu\'elle raconte : le violet évoque le lo-fi, le jaune un album de 63KLUF, le bleu et le doré l\'identité du bar. Pour Motion Design, les couleurs reprennent la charte de la fédération.', [7, 6, 1, 2], '909', 'Obscura, affiche'],
+    ['La typo', 'donne le ton', 'La typographie installe l\'ambiance d\'un projet : AKIRA pour un festival percutant, une typographie sobre et légèrement décalée pour un bar calme, une typographie pixel pour un film inspiré du jeu vidéo, une typographie chaleureuse pour un food truck.', [0, 1, 2, 3], '889', 'Graines Électroniques, affiche officielle'],
+    ['Garder l\'esprit', 'du lieu', 'Quand je reprends une identité, je conserve l\'esprit du lieu tout en proposant un regard nouveau. Pour Toca Loco, la direction artistique reste fidèle à la culture mexicaine.', [1, 3], '900', 'Le Jeu de Paume, logo et carte'],
+    ['Créer aussi', 'pour moi', 'En dehors des projets d\'école, je réalise des pochettes et des affiches pour moi-même. C\'est là que je m\'exerce le plus et que je pousse ma direction artistique plus loin.', [5, 6], '905', 'Dancing In The Rain, affiche']
+  ];
+  const NP = PRINCIPES.length;
   const NB = PROJETS.length;
   const src = id => 'assets/projets/' + id + '.jpg';
   const nn = i => String(i + 1).padStart(2, '0');
   const compte = p => { const nv = p[2].filter(x => x[2] === 'video').length, ni = p[2].length - nv; return [nv ? 'Vidéo' : '', ni ? ni + ' visuels' : ''].filter(Boolean).join(' + '); };
-  const ORDRE = ['accueil', 'projets', 'univers', 'contact'];   // « À propos » est fusionné dans le premier volet
+  const ORDRE = ['accueil', 'projets', 'principes', 'contact'];   // « À propos » est fusionné dans le premier volet
 
   // ───── Typo écrasée ─────
   const mctx = document.createElement('canvas').getContext('2d');
@@ -170,6 +181,9 @@
     $('#pj-choix').textContent = TEXTES[i][2];
     $('#pj-outils').innerHTML = TEXTES[i][3].map(o => '<li>' + o + '</li>').join('');
     $('#pj-tech').innerHTML = (p[5] || []).map(([k, val]) => '<dt>' + k + '</dt><dd>' + val + '</dd>').join('');
+    // la ligne discrète des principes que ce projet illustre
+    const liesPr = PRINCIPES.map((x, k) => x[3].includes(i) ? '<a class="pill mini" href="#/principes/' + nn(k) + '" data-af>' + x[0] + ' ' + x[1] + ' →</a>' : '').join('');
+    $('#pj-pr').innerHTML = liesPr ? '<span class="label">Principes</span>' + liesPr : '';
     $('#pj-palette').innerHTML = (p[4] || []).map(c => '<i style="background:' + c + '"></i>').join('');
     $('#sc-vign').innerHTML = p[2].map((x, k) => '<button data-k="' + k + '" aria-label="' + x[1] + '" data-af><img src="' + src(x[0]) + '" alt=""></button>').join('');
     $$('#sc-vign button').forEach(b => b.addEventListener('click', () => montrer(+b.dataset.k)));
@@ -191,10 +205,42 @@
   $('#pj-suiv').addEventListener('click', () => allerProjet(1));
   $('#vers-planche').addEventListener('click', () => { location.hash = '#/projets'; });
 
+  // ───── Principes : un principe par écran ─────
+  let principe = -1;
+  $('#pr-traits').innerHTML = PRINCIPES.map((x, k) => '<button data-k="' + k + '" aria-label="' + x[0] + ' ' + x[1] + '" data-af></button>').join('');
+  $$('#pr-traits button').forEach(b => b.addEventListener('click', () => { location.hash = '#/principes/' + nn(+b.dataset.k); }));
+  function montrerPrincipe(k) {
+    const x = PRINCIPES[k], change = k !== principe;
+    principe = k;
+    $('#pr-titre').textContent = x[0] + ' ' + x[1];
+    $('#pr-l1 span').textContent = x[0];
+    $('#pr-l2 span').textContent = x[1];
+    $('#pr-d').textContent = x[2];
+    $('#pr-liens').innerHTML = x[3].map(i => '<a class="pill mini" href="#/projets/' + nn(i) + '" data-af>' + PROJETS[i][0] + ' →</a>').join('');
+    $('#pr-img').src = src(x[4]);
+    $('#pr-img').alt = x[5];
+    $('#pr-leg').textContent = x[5];
+    $$('#pr-traits button').forEach((b, j) => b.setAttribute('aria-current', j === k));
+    fit($('#pr-l1')); fit($('#pr-l2'));
+    if (change && !reduce) { const pr = $('.pr'); pr.classList.remove('entre'); void pr.offsetWidth; pr.classList.add('entre'); }
+  }
+  const allerPrincipe = d => { location.hash = '#/principes/' + nn((principe + d + NP) % NP); };
+  $('#pr-prec').addEventListener('click', () => allerPrincipe(-1));
+  $('#pr-suiv').addEventListener('click', () => allerPrincipe(1));
+  // sur téléphone : glisser l'écran vers la gauche / la droite = principe suivant / précédent
+  let px0 = null, py0 = 0;
+  $('.pr').addEventListener('touchstart', e => { px0 = e.touches[0].clientX; py0 = e.touches[0].clientY; }, { passive: true });
+  $('.pr').addEventListener('touchend', e => {
+    if (px0 === null) return;
+    const dx = e.changedTouches[0].clientX - px0, dy = e.changedTouches[0].clientY - py0; px0 = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) allerPrincipe(dx < 0 ? 1 : -1);
+  });
+
   // ───── Routeur ─────
   function lire() {
     let [a, b] = location.hash.replace(/^#\/?/, '').split('/');
-    if (a === 'playlist') a = 'univers';   // ancien lien partagé
+    if (a === 'playlist' || a === 'univers') a = 'principes';   // anciens liens partagés
+    if (a === 'principes') return { v: 'principes', k: /^\d\d$/.test(b || '') && +b >= 1 && +b <= NP ? +b - 1 : 0 };
     if (a === 'projets' && /^\d\d$/.test(b || '') && +b >= 1 && +b <= NB) return { v: 'projets', i: +b - 1 };
     if (ORDRE.indexOf(a) > 0) return { v: a };
     return { v: 'accueil' };
@@ -214,6 +260,7 @@
     if (r.i !== undefined) fiche(r.i); else $('#pj-fil').textContent = NB + ' projets';
     // sur téléphone la fiche défile : chaque nouveau projet (ou le retour à l'index) repart du haut
     if (r.v === 'projets') pj.querySelector('.contenu').scrollTop = 0;
+    if (r.v === 'principes') { montrerPrincipe(r.k); $('.principes .contenu').scrollTop = 0; }
     document.title = (r.v === 'accueil' ? '' : (r.i !== undefined ? PROJETS[r.i][0] : $('.volet.ouvert .titre').textContent) + ' — ') + 'Mathys Chabanel';
     const v = $('.volet.ouvert');
     // les titres écrasés se recalent une fois le volet déplié
@@ -236,6 +283,7 @@
     if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
       const d = e.key === 'ArrowRight' ? 1 : -1;
       if (r.i !== undefined) { allerProjet(d); return; }
+      if (r.v === 'principes') { allerPrincipe(d); return; }
       const k = ORDRE.indexOf(r.v) + d;
       if (k >= 0 && k < ORDRE.length) location.hash = '#/' + (k ? ORDRE[k] : '');
     }
@@ -264,5 +312,5 @@
     afficher();
     requestAnimationFrame(frame);
   });
-  addEventListener('resize', () => { fitVolet($('.volet.ouvert')); fit($('#u-sq')); });
+  addEventListener('resize', () => fitVolet($('.volet.ouvert')));
 })();

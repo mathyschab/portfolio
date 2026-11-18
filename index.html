@@ -151,24 +151,32 @@
   .pellicule button:hover { opacity: .8; }
   .pellicule button[aria-current="true"] { opacity: 1; outline: 1px solid var(--accent); outline-offset: 2px; }
 
-  /* Univers : à gauche le titre écrasé + l'intro ; puis deux colonnes « ce que je sais faire » / « le monde qui m'entoure » */
-  .univers .corps { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 3.4vw, 56px); align-content: start; }
-  .u-intro { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
-  .u-intro .sq { height: clamp(64px, 13vh, 140px); width: 100%; }
-  .u-intro .pave { font-weight: 200; font-size: clamp(15px, 1.15vw, 18px); line-height: 1.6; color: var(--gris2); text-wrap: pretty; }
-  .u-intro .pave::first-line { color: var(--blanc); }
-  .u-fiche { display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; font-size: 13px; }
-  .u-fiche dt { font-size: 12px; color: var(--gris); padding-top: 2px; }
-  .u-intro .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; }
-  .u-bloc { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-  .u-liste { margin: 0; padding: 0; list-style: none; border-bottom: 1px solid var(--trait); }
-  .u-liste li { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; padding: clamp(10px, 1.8vh, 16px) 4px; border-top: 1px solid var(--trait); }
-  .u-liste b { font-weight: 300; font-size: clamp(16px, 1.25vw, 19px); color: var(--blanc); }
-  .u-liste .d { font-size: 13px; line-height: 1.5; color: var(--gris2); text-wrap: pretty; }
-  .u-liste a { color: var(--blanc); border-bottom: 1px solid var(--blanc); transition: color .2s, border-color .2s; }
-  .u-liste a em { font-style: normal; }
-  .u-liste a:hover { background: var(--blanc); color: var(--noir); }
-  .puces { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  /* Principes (remplace Univers) : un principe par écran — la phrase écrasée sur deux lignes, l'explication,
+     les projets où on le voit (cliquables) ; l'image d'un projet à droite, au-dessus du grain comme les visuels projets */
+  .pr { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); grid-template-rows: minmax(0, 1fr); gap: clamp(28px, 3.4vw, 56px); }
+  .pr-texte { display: flex; flex-direction: column; gap: clamp(10px, 1.6vh, 16px); min-width: 0; min-height: 0; }
+  .pr .sq { height: clamp(56px, 12vh, 128px); width: 100%; flex: none; }
+  .pr-d { margin-top: clamp(4px, 1vh, 10px); max-width: 46ch; font-size: clamp(14px, 1.05vw, 16.5px); line-height: 1.6; color: var(--gris2); text-wrap: pretty; }
+  .pr-vu { display: flex; flex-direction: column; gap: 8px; }
+  .pr-liens, .fiche .pj-pr { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .pill.mini { padding: 6px 11px; font-size: 12px; }
+  .pr-nav { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 12px; }
+  .pr-traits { display: flex; gap: 6px; }
+  .pr-traits button { position: relative; width: 24px; height: 16px; }
+  .pr-traits button::before { content: ''; position: absolute; left: 0; right: 0; top: 7px; height: 2px; background: #3a3a3e; transition: background .2s; }
+  .pr-traits button:hover::before { background: var(--gris); }
+  .pr-traits button[aria-current="true"]::before { background: var(--blanc); }
+  .pr-fl { display: flex; gap: 8px; flex: none; }
+  .pr-fl .pill { white-space: nowrap; }
+  .pr-img { position: relative; z-index: 91; margin: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+  .pr-img img { display: block; max-width: 100%; max-height: calc(100% - 26px); object-fit: contain; }
+  .pr.entre .pr-texte, .pr.entre .pr-img { animation: apparait .45s cubic-bezier(.2, .9, .2, 1) both; }
+  .pr.entre .pr-img { animation-delay: .06s; }
+  @keyframes apparait { from { opacity: 0; transform: translateY(8px); } }
+  /* Fiche projet : la ligne discrète des principes que le projet illustre */
+  .fiche .pj-pr { margin: 0 0 18px; }
+  .fiche .pj-pr .label { flex-basis: 100%; }
+  .fiche .pj-pr:empty { display: none; }
 
   /* Carte « bande-son » : accueil et fiches projet */
   .bande-son { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 10px 12px; border: 1px solid var(--blanc); transition: background .2s, color .2s; }
@@ -248,7 +256,8 @@
     .fiche .nav { order: 5; flex-direction: row; justify-content: space-between; padding-top: 12px; margin-top: 8px; border-top: 1px solid var(--trait); }
     /* Accueil : nom plus court, portrait + phrase d'accroche côte à côte, le reste en colonne */
     .accueil .nom { height: 15vh; }
-    .presentation { grid-template-columns: 92px 1fr !important; gap: 12px 14px; align-items: start; align-content: start; padding-top: 12px; margin-top: 12px; overflow: hidden; }
+    /* la présentation ne coupe plus son contenu sur les petits écrans : le volet défile jusqu'à la carte Principes */
+    .presentation { grid-template-columns: 92px 1fr !important; gap: 12px 14px; align-items: start; align-content: start; padding-top: 12px; margin-top: 12px; flex: none; }
     .presentation .texte { display: contents; }
     .presentation .texte > .label { display: none; }
     .presentation .lead { grid-column: 2; grid-row: 1; align-self: end; font-size: 16px; }
@@ -259,17 +268,18 @@
     .bande-son { margin-top: 0; padding: 8px 10px; }
     .bande-son .mini { width: 32px; height: 32px; }
     .bande-son b { font-size: 13px; }
-    /* Univers : tout en une colonne, qui défile dans le volet */
-    .univers .corps { display: flex; flex-direction: column; gap: 22px; }
-    .u-intro { gap: 12px; }
-    .u-intro .sq { height: 52px; }
-    .u-intro .pave { font-size: 13.5px; line-height: 1.5; }
-    .u-fiche { font-size: 12px; gap: 6px 14px; }
-    .u-intro .actions .pill { padding: 7px 12px; font-size: 10px; }
-    .u-bloc { gap: 10px; }
-    .u-liste li { padding: 9px 2px; }
-    .u-liste b { font-size: 15px; }
-    .u-liste .d { font-size: 12px; }
+    .fiche .pj-pr { order: 4; margin: 0; }
+    /* Principes : la phrase, l'image en grand (hauteur fixe, elle ne saute pas d'un principe à l'autre), le texte,
+       les projets, puis la navigation ; on glisse l'écran pour changer de principe */
+    .pr { display: flex; flex-direction: column; flex: none; gap: 10px; }
+    .pr-texte { display: contents; }
+    .pr .sq { order: 1; height: 46px; }
+    .pr-img { order: 2; height: 50vh; height: clamp(240px, 50svh, 520px); margin: 6px 0 4px; }
+    .pr-d { order: 3; margin: 0; font-size: 13.5px; line-height: 1.5; }
+    .pr-vu { order: 3; margin-top: 4px; }
+    .pr-nav { order: 4; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--trait); gap: 10px; }
+    .pr-traits { gap: 4px; }
+    .pr-traits button { width: 16px; }
     /* Contact : l'adresse tient dans la largeur, liens compacts */
     .contact .corps { grid-template-columns: minmax(0, 1fr); gap: 16px; }
     .mail .sq { height: 44px; }
@@ -302,8 +312,8 @@
           </div>
         </div>
         <div class="droite">
-          <dl><dt>École</dt><dd>Brassart Lyon · 3e année</dd><dt>Recherche</dt><dd>Stage 2 à 3 mois · janv. → mars 2027</dd><dt>Outils</dt><dd>Photoshop, Illustrator, InDesign, Figma</dd><dt>Domaines</dt><dd>Création, mise en page, identité visuelle, édition</dd></dl>
-          <a class="bande-son" href="#/univers" data-af><span><span class="label">Univers</span><b>Mes skills et ce qui m'inspire</b></span><span class="f">→</span></a>
+          <dl><dt>École</dt><dd>Brassart Lyon · 3e année</dd><dt>Recherche</dt><dd>Stage 2 à 3 mois · janv. → mars 2027</dd><dt>Outils</dt><dd>Photoshop, Illustrator, InDesign, Figma, After Effects</dd><dt>Domaines</dt><dd>Création, mise en page, identité visuelle, édition</dd></dl>
+          <a class="bande-son" href="#/principes" data-af><span><span class="label">Principes</span><b>Ma façon de travailler, en 6 principes</b></span><span class="f">→</span></a>
         </div>
       </div>
     </div>
@@ -328,6 +338,7 @@
           <span class="cadre" id="pj-cadre"></span>
           <div class="desc"><h3>La demande</h3><p id="pj-demande"></p><h3>Mes choix</h3><p id="pj-choix"></p></div>
           <ul class="outils" id="pj-outils" aria-label="Logiciels"></ul>
+          <div class="pj-pr" id="pj-pr"></div>
           <span class="label" id="pj-compte"></span>
           <dl class="tech" id="pj-tech"></dl>
           <div class="palette" id="pj-palette"></div>
@@ -338,44 +349,24 @@
     </div>
   </section>
 
-  <!-- 02 Univers : ce que je sais faire (skills) + le monde qui m'entoure (centres d'intérêt) — remplace l'ancien volet Playlist -->
-  <section class="volet univers" data-v="univers">
-    <a class="tranche" href="#/univers" data-af><span class="titre">Univers</span><span class="fl">→</span></a>
+  <!-- 02 Principes : ma façon de travailler en 6 principes, un par écran (remplace Univers ; #/univers et #/playlist y mènent) -->
+  <section class="volet principes" data-v="principes">
+    <a class="tranche" href="#/principes" data-af><span class="titre">Principes</span><span class="fl">→</span></a>
     <div class="contenu">
-      <div class="corps">
-        <div class="u-intro">
-          <div class="sq" id="u-sq"><span>Univers</span></div>
-          <p class="pave">Ce que je sais faire, et tout ce qui nourrit ce que je fais. Mes visuels viennent de ce que j'écoute, de ce que je joue et de ce que je porte.</p>
-          <dl class="u-fiche">
-            <dt>Qualités</dt><dd>Travail d'équipe · Autonomie · Écoute</dd>
-            <dt>Langue</dt><dd>Anglais</dd>
-          </dl>
-          <div class="actions">
-            <a class="pill plein" href="#/projets" data-af>Voir les projets →</a>
-            <a class="pill" href="docs/CV-Mathys-Chabanel.pdf?v=2" download="CV-Mathys-Chabanel.pdf" data-af>CV ↓</a>
+      <div class="entete"><span class="label">Ma façon de travailler, en 6 principes</span></div>
+      <div class="pr">
+        <div class="pr-texte">
+          <h2 class="sr" id="pr-titre"></h2>
+          <div class="sq" id="pr-l1" aria-hidden="true"><span></span></div>
+          <div class="sq" id="pr-l2" aria-hidden="true"><span></span></div>
+          <p class="pr-d" id="pr-d"></p>
+          <div class="pr-vu"><span class="label">Vu dans</span><div class="pr-liens" id="pr-liens"></div></div>
+          <div class="pr-nav">
+            <div class="pr-traits" id="pr-traits" aria-label="Principes"></div>
+            <div class="pr-fl"><button class="pill" id="pr-prec" aria-label="Principe précédent" data-af>←</button><button class="pill" id="pr-suiv" data-af>Suivant →</button></div>
           </div>
         </div>
-        <div class="u-bloc">
-          <span class="label">Ce que je sais faire</span>
-          <ol class="u-liste">
-            <li><b>Identité visuelle</b><span class="d">Logos, chartes et déclinaisons, du bar au food truck.</span></li>
-            <li><b>Direction artistique</b><span class="d">Covers d'albums, affiches : poser une ambiance et la tenir.</span></li>
-            <li><b>Typographie &amp; composition</b><span class="d">Grain, contrastes, typos déformées et écrasées.</span></li>
-            <li><b>Mise en page &amp; édition</b><span class="d">Flyers, menus, supports de communication.</span></li>
-            <li><b>Motion design</b><span class="d">Animer une identité, du storyboard au film.</span></li>
-          </ol>
-          <ul class="puces" aria-label="Logiciels"><li>Photoshop</li><li>Illustrator</li><li>InDesign</li><li>Figma</li><li>After Effects</li><li>Claude Code</li></ul>
-        </div>
-        <div class="u-bloc">
-          <span class="label">Le monde qui m'entoure</span>
-          <ol class="u-liste">
-            <li><b>Musique</b><span class="d">La scène underground, ses clips et ses pochettes. En ce moment : <a href="https://www.deezer.com/fr/album/1029375272" target="_blank" rel="noopener" data-af><em>Dancing In The Rain</em> de 63KLUF ↗</a></span></li>
-            <li><b>Jeux vidéo</b><span class="d">Des mondes entiers construits par l'image et l'interface.</span></li>
-            <li><b>Mode</b><span class="d">Le vêtement comme signe, et tout l'univers visuel autour.</span></li>
-            <li><b>Design</b><span class="d">Affiches, typos, studios : je regarde, je garde, je recompose.</span></li>
-            <li><b>Voyage</b><span class="d">Les villes, leurs enseignes et leurs couleurs.</span></li>
-          </ol>
-        </div>
+        <figure class="pr-img"><img id="pr-img" alt=""><figcaption class="label" id="pr-leg"></figcaption></figure>
       </div>
     </div>
   </section>
@@ -397,6 +388,6 @@
   </section>
 </div>
 
-<script src="assets/volets.js?v=b30"></script>
+<script src="assets/volets.js?v=b31"></script>
 </body>
 </html>
