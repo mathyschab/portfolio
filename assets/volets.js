@@ -173,6 +173,15 @@
     $('#pj-palette').innerHTML = (p[4] || []).map(c => '<i style="background:' + c + '"></i>').join('');
     $('#sc-vign').innerHTML = p[2].map((x, k) => '<button data-k="' + k + '" aria-label="' + x[1] + '" data-af><img src="' + src(x[0]) + '" alt=""></button>').join('');
     $$('#sc-vign button').forEach(b => b.addEventListener('click', () => montrer(+b.dataset.k)));
+    // téléphone : la visionneuse prend la hauteur de l'image la plus haute du projet, pour éviter les grands vides
+    const sc = $('#pj-scene'); let rmax = 0;
+    sc.style.removeProperty('--ratio');
+    p[2].forEach(x => {
+      if (x[2] === 'video') return;
+      const im = new Image();
+      im.onload = () => { if (projet !== i || !im.naturalWidth) return; rmax = Math.max(rmax, im.naturalHeight / im.naturalWidth); sc.style.setProperty('--ratio', rmax.toFixed(3)); };
+      im.src = src(x[0]);
+    });
     montrer(0);
     $$('#pellicule button').forEach(b => b.setAttribute('aria-current', +b.dataset.i === i));
     $('#pj-fil').textContent = p[0];
@@ -203,6 +212,8 @@
     $('#vers-planche').hidden = r.i === undefined;
     if (r.i === undefined) arreterFilm();
     if (r.i !== undefined) fiche(r.i); else $('#pj-fil').textContent = NB + ' projets';
+    // sur téléphone la fiche défile : chaque nouveau projet (ou le retour à l'index) repart du haut
+    if (r.v === 'projets') pj.querySelector('.contenu').scrollTop = 0;
     document.title = (r.v === 'accueil' ? '' : (r.i !== undefined ? PROJETS[r.i][0] : $('.volet.ouvert .titre').textContent) + ' — ') + 'Mathys Chabanel';
     const v = $('.volet.ouvert');
     // les titres écrasés se recalent une fois le volet déplié
