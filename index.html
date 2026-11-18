@@ -169,7 +169,8 @@
   .pr-fl { display: flex; gap: 8px; flex: none; }
   .pr-fl .pill { white-space: nowrap; }
   .pr-img { position: relative; z-index: 91; margin: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-  .pr-img img { display: block; max-width: 100%; max-height: calc(100% - 26px); object-fit: contain; }
+  .pr-img img { display: block; max-width: 100%; max-height: calc(100% - 26px); object-fit: contain; transition: opacity .25s; }
+  .pr-img img.charge { opacity: 0; transition: none; }
   .pr.entre .pr-texte, .pr.entre .pr-img { animation: apparait .45s cubic-bezier(.2, .9, .2, 1) both; }
   .pr.entre .pr-img { animation-delay: .06s; }
   @keyframes apparait { from { opacity: 0; transform: translateY(8px); } }
@@ -388,6 +389,6 @@
   </section>
 </div>
 
-<script src="assets/volets.js?v=b31"></script>
+<script src="assets/volets.js?v=b32"></script>
 </body>
 </html>

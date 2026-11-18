@@ -206,7 +206,9 @@
   $('#vers-planche').addEventListener('click', () => { location.hash = '#/projets'; });
 
   // ───── Principes : un principe par écran ─────
-  let principe = -1;
+  let principe = -1, prechargees = false;
+  // l'image s'efface pendant son chargement : jamais l'image d'un principe sous le titre d'un autre
+  $('#pr-img').addEventListener('load', () => $('#pr-img').classList.remove('charge'));
   $('#pr-traits').innerHTML = PRINCIPES.map((x, k) => '<button data-k="' + k + '" aria-label="' + x[0] + ' ' + x[1] + '" data-af></button>').join('');
   $$('#pr-traits button').forEach(b => b.addEventListener('click', () => { location.hash = '#/principes/' + nn(+b.dataset.k); }));
   function montrerPrincipe(k) {
@@ -217,8 +219,11 @@
     $('#pr-l2 span').textContent = x[1];
     $('#pr-d').textContent = x[2];
     $('#pr-liens').innerHTML = x[3].map(i => '<a class="pill mini" href="#/projets/' + nn(i) + '" data-af>' + PROJETS[i][0] + ' →</a>').join('');
-    $('#pr-img').src = src(x[4]);
-    $('#pr-img').alt = x[5];
+    const im = $('#pr-img');
+    if (im.getAttribute('src') !== src(x[4])) { im.classList.add('charge'); im.src = src(x[4]); if (im.complete && im.naturalWidth) im.classList.remove('charge'); }
+    im.alt = x[5];
+    // à la première ouverture du volet, les 6 images se chargent d'avance : le passage d'un principe à l'autre est immédiat
+    if (!prechargees) { prechargees = true; PRINCIPES.forEach(p => { new Image().src = src(p[4]); }); }
     $('#pr-leg').textContent = x[5];
     $$('#pr-traits button').forEach((b, j) => b.setAttribute('aria-current', j === k));
     fit($('#pr-l1')); fit($('#pr-l2'));
