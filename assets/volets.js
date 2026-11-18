@@ -51,15 +51,15 @@
      'Le violet évoque l\'univers lo-fi, tandis que le noir et blanc appliqué aux artistes renvoie à l\'opium. Le grain, fil conducteur de mon travail, relie l\'ensemble.',
      ['Photoshop', 'Illustrator']]
   ];
-  // Principes (choisis avec Mathys, textes tirés de ses « Mes choix » — à corriger par lui) :
+  // Principes (choisis avec Mathys ; chaque texte ne parle que du visuel montré à côté, en exemple) :
   // [ligne 1, ligne 2 du titre écrasé, explication, projets où on le voit (index dans PROJETS), image, légende]
   const PRINCIPES = [
-    ['Partir de', 'la musique', 'Mon inspiration vient souvent de l\'univers visuel des clips de rap : leur grain, leurs couleurs, leur intensité. C\'est le point de départ de la plupart de mes projets, des pochettes aux affiches.', [5, 4, 0], '911', '63OG, cover'],
-    ['Le grain', 'comme signature', 'Le grain est le fil conducteur de mon travail. Présent dans une grande partie de mes projets, il ancre chaque image dans ma direction artistique et les relie entre elles.', [4, 7, 0], '914', 'C3L3ST, cover'],
-    ['Une couleur,', 'une raison', 'Je choisis chaque teinte pour ce qu\'elle raconte : le violet évoque le lo-fi, le jaune un album de 63KLUF, le bleu et le doré l\'identité du bar. Pour Motion Design, les couleurs reprennent la charte de la fédération.', [7, 6, 1, 2], '909', 'Obscura, affiche'],
-    ['La typo', 'donne le ton', 'La typographie installe l\'ambiance d\'un projet : AKIRA pour un festival percutant, une typographie sobre et légèrement décalée pour un bar calme, une typographie pixel pour un film inspiré du jeu vidéo, une typographie chaleureuse pour un food truck.', [0, 1, 2, 3], '889', 'Graines Électroniques, affiche officielle'],
-    ['Garder l\'esprit', 'du lieu', 'Quand je reprends une identité, je conserve l\'esprit du lieu tout en proposant un regard nouveau. Pour Toca Loco, la direction artistique reste fidèle à la culture mexicaine.', [1, 3], '900', 'Le Jeu de Paume, logo et carte'],
-    ['Créer aussi', 'pour moi', 'En dehors des projets d\'école, je réalise des pochettes et des affiches pour moi-même. C\'est là que je m\'exerce le plus et que je pousse ma direction artistique plus loin.', [5, 6], '905', 'Dancing In The Rain, affiche']
+    ['Partir de', 'la musique', 'Pour la pochette de 63OG, je suis parti de l\'univers visuel des clips d\'un artiste de rap que j\'apprécie particulièrement. Les cadres en pointillés mettent en avant ses bijoux et son regard, et le titre, flou et en très grand, passe derrière lui.', [5, 4, 0], '911', '63OG, cover'],
+    ['Le grain', 'comme signature', 'Sur la pochette de C3L3ST, le grain couvre toute l\'image, de la station-service de nuit au titre rouge posé au sol. Présent dans une grande partie de mes projets, il ancre la pochette dans ma direction artistique.', [4, 7, 0], '914', 'C3L3ST, cover'],
+    ['Une couleur,', 'une raison', 'Sur l\'affiche Obscura, chaque couleur a sa raison : le violet évoque l\'univers lo-fi, jusqu\'au mot « Lofi » écrit par-dessus le titre, tandis que le noir et blanc appliqué aux artistes renvoie à l\'opium.', [7, 6, 1, 2], '909', 'Obscura, affiche'],
+    ['La typo', 'donne le ton', 'Pour l\'affiche de Graines Électroniques, la typographie AKIRA affirme une identité forte et percutante. Le nom du festival est posé à la verticale sur toute la hauteur de l\'affiche, les dates en très grand, sur une palette très chaude qui évoque la lumière et le feu intérieur.', [0, 1, 2, 3], '889', 'Graines Électroniques, affiche officielle'],
+    ['Garder l\'esprit', 'du lieu', 'Pour la carte du Jeu de Paume, j\'ai conservé l\'esprit du bar tout en proposant un regard nouveau. J\'ai repris le bleu de leur identité et ajouté du doré pour apporter de la chaleur ; le logo, aux lettres légèrement décalées, installe une atmosphère calme.', [1, 3], '900', 'Le Jeu de Paume, logo et carte'],
+    ['Créer aussi', 'pour moi', 'L\'affiche Dancing In The Rain est un projet personnel, réalisé pour m\'exercer dans la continuité de 63OG. Le jaune du titre et de l\'auréole fait référence à un album de 63KLUF et aux bracelets qu\'il a sortis.', [5, 6], '905', 'Dancing In The Rain, affiche']
   ];
   const NP = PRINCIPES.length;
   const NB = PROJETS.length;
