@@ -18,7 +18,7 @@
   ];
   // Pour chaque projet (même ordre que PROJETS) : [cadre, la demande, mes choix, logiciels] — d'après les notes de Mathys
   const TEXTES = [
-    ['Projet d\'école, 3e année',
+    ['Projet client',
      'Concevoir l\'identité visuelle d\'un festival engagé, déclinée sur une affiche, un site web et des goodies.',
      'Mon inspiration vient de l\'univers visuel des clips musicaux : un grain prononcé et une palette très chaude. Je voulais exprimer le thème de la lumière et du feu intérieur. La typographie AKIRA affirme une identité forte et percutante.',
      ['Photoshop', 'Illustrator', 'Figma']],
